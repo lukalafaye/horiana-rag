@@ -1,0 +1,13 @@
+PyPDF2
+python-docx
+scikit-learn
+numpy
+lxml
+scipy
+pandas
+
+[dev]
+pytest
+flake8
+black
+twine

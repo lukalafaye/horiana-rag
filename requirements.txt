@@ -1,0 +1,8 @@
+# General dependencies
+PyPDF2
+python-docx
+scikit-learn
+pandas
+
+# Development and testing dependencies
+pytest
