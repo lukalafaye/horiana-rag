@@ -1,4 +1,5 @@
 # Define variables for commands and paths
+.PHONY: clean
 PYTHON = python3
 PIP = pip
 TESTS_DIR = tests

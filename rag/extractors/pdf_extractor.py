@@ -37,6 +37,12 @@ def extract_information(pages_text):
         start = pages_text[0].find(
             "ÉTUDE"
         )  # Add first word after title for each new doc type!!!!!
+
+    if start == -1:
+        start = pages_text[0].find(
+            "STUDY"
+        )  # Add first word after title for each new doc type!!!!!
+
     docinfot = pages_text[0][start:]
 
     docinfop = r"\s*(?P<key>[\w° ]+):\s*(?P<value>.*?\n)"

@@ -1,6 +1,9 @@
 # Ignore virtual environment directory
 venv/
 
+# Ignore confidential documents
+confidential/
+
 # Ignore Python bytecode
 *.pyc
 __pycache__/
