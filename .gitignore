@@ -24,3 +24,5 @@ dist/
 # Ignore system-specific files
 .DS_Store
 Thumbs.db
+
+.pytest_cache/
