@@ -1,18 +1,14 @@
-import pandas as pd
-
 from rag.extractors.pdf_extractor import (
     extract_metadata_pages,
     extract_information,
     extract_title,
     extract_methods,
     extract_keyresults,
-    extract_tables
+    extract_tables,
 )
 
-from rag.extractors.docx_extractor import (
-    extract_tables_from_doc,
-    fetch_relevant_tables
-)
+from rag.extractors.docx_extractor import extract_tables_from_doc, fetch_relevant_tables
+
 
 def process_files(pdf_path, doc_path):
     # Extract information from the PDF
@@ -35,7 +31,7 @@ def process_files(pdf_path, doc_path):
         "methods": methods,
         "tables": tables,
         "keyresults": keyresults,
-        "tables": tables
+        "tables": tables,
     }
 
     assert document["tables"].keys() == relevant_doc_tables.keys()
@@ -45,4 +41,3 @@ def process_files(pdf_path, doc_path):
         document["tables"][id].append(table)
 
     return document
-
