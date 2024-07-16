@@ -3,6 +3,7 @@ PyPDF2
 python-docx
 scikit-learn
 pandas
+six
 
 # Development and testing dependencies
 pytest

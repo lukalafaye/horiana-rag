@@ -13,6 +13,7 @@ setup(
         'lxml',
         'scipy',
         'pandas',
+        'six'
     ],
     extras_require={
         'dev': [
