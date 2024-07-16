@@ -42,7 +42,6 @@ def process_files(pdf_path, doc_path):
 
     # Add the relevant DOCX tables to the PDF tables
     for id, table in relevant_doc_tables.items():
-        table = table.to_json(orient='records')
         document["tables"][id].append(table)
 
     return document

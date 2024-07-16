@@ -1,14 +1,15 @@
 import json
 import sys
 from pprint import pprint
+import pickle
 
 from rag.extractors.utils import process_files  # Updated import path
 
 def preprocess(pdf_path, doc_path, output_path):
     document = process_files(pdf_path, doc_path)
 
-    with open(output_path, 'w') as output_file:
-        json.dump(document, output_file, indent=4)
+    with open(output_path, 'wb') as f:
+        pickle.dump(document, f)
 
 def main():
     if len(sys.argv) != 4:

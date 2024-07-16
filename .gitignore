@@ -1,0 +1,23 @@
+# Ignore virtual environment directory
+venv/
+
+# Ignore Python bytecode
+*.pyc
+__pycache__/
+
+# Ignore setup.py egg info
+*.egg-info/
+
+# Ignore build directories
+build/
+dist/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore local .env files
+.env
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db

@@ -3,6 +3,15 @@ from pprint import pprint
 import pandas as pd
 import re
 
+def fix_encoding_issues(text):
+    replacements = {
+        '³': '>=',
+        '£': '<='
+    }
+    for wrong, correct in replacements.items():
+        text = text.replace(wrong, correct)
+    return text
+
 def extract_tables_from_doc(path):
     doc = Document(path)
     tables = []
@@ -11,7 +20,7 @@ def extract_tables_from_doc(path):
         for i, row in enumerate(table.rows):
             for j, cell in enumerate(row.cells):
                 if cell.text:
-                    df[i][j] = cell.text
+                    df[i][j] = fix_encoding_issues(cell.text)
         tables.append(pd.DataFrame(df))
     return tables
 

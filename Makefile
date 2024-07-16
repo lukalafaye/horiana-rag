@@ -5,6 +5,7 @@ TESTS_DIR = tests
 VENV_DIR = venv
 REQUIREMENTS = requirements.txt
 SETUP = setup.py
+PACKAGE_NAME = horiana-rag
 
 # Target to create a virtual environment
 venv:
@@ -16,6 +17,12 @@ install: venv
 	$(VENV_DIR)/bin/$(PIP) install -r $(REQUIREMENTS)
 	$(VENV_DIR)/bin/$(PIP) install .[dev]
 	@echo "Dependencies installed."
+
+# Target to uninstall and reinstall the package
+reinstall:
+	$(VENV_DIR)/bin/$(PIP) uninstall -y $(PACKAGE_NAME)
+	$(VENV_DIR)/bin/$(PIP) install .[dev]
+	@echo "Package reinstalled."
 
 # Target to run tests
 test:
@@ -39,16 +46,24 @@ quality: lint format
 clean:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -delete
+	rm -rf $(VENV_DIR)
 	@echo "Cleaned up."
+
+# Target to rebuild the project
+rebuild: clean venv install
+	@echo "Project rebuilt."
+
 
 # Target to display the help message
 help:
 	@echo "Makefile commands:"
 	@echo "  venv       - Create a virtual environment"
 	@echo "  install    - Install core and development dependencies"
+	@echo "  reinstall  - Uninstall and reinstall the package"
 	@echo "  test       - Run tests"
 	@echo "  lint       - Lint the code"
 	@echo "  format     - Format the code"
 	@echo "  quality    - Run lint and format"
 	@echo "  clean      - Clean up pyc files and caches"
+	@echo "  rebuild    - Rebuild the project"
 	@echo "  help       - Display this help message"
