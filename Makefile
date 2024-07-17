@@ -15,6 +15,7 @@ venv:
 
 # Target to install core and development dependencies
 install: venv
+	$(VENV_DIR)/bin/$(PIP) install wheel
 	$(VENV_DIR)/bin/$(PIP) install -r $(REQUIREMENTS)
 	$(VENV_DIR)/bin/$(PIP) install .[dev]
 	@echo "Dependencies installed."
@@ -22,6 +23,7 @@ install: venv
 # Target to uninstall and reinstall the package
 reinstall:
 	$(VENV_DIR)/bin/$(PIP) uninstall -y $(PACKAGE_NAME)
+	$(VENV_DIR)/bin/$(PIP) install wheel
 	$(VENV_DIR)/bin/$(PIP) install .[dev]
 	@echo "Package reinstalled."
 

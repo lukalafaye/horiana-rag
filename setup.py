@@ -1,4 +1,6 @@
 from setuptools import setup, find_packages
+import os
+import subprocess
 
 setup(
     name='horiana-rag',
@@ -6,6 +8,7 @@ setup(
     description='A Python project for Retrieval-Augmented Generation.',
     packages=find_packages(include=['rag', 'rag.*']),  # Include the `rag` package and subpackages
     install_requires=[
+        'wheel',
         'PyPDF2',
         'python-docx',
         'scikit-learn',
@@ -15,7 +18,8 @@ setup(
         'pandas',
         'six',
         'biobert-embedding @ git+https://github.com/lukalafaye/biobert_embedding',
-        'langchain_chroma'
+        'langchain_chroma',
+        'sentence_transformers',
         ],
     extras_require={
         'dev': [

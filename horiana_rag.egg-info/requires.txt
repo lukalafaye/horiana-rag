@@ -8,6 +8,7 @@ pandas
 six
 biobert-embedding@ git+https://github.com/lukalafaye/biobert_embedding
 langchain_chroma
+sentence_transformers
 
 [dev]
 pytest

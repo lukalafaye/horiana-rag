@@ -3,23 +3,53 @@ from pathlib import Path
 import json 
 from pprint import pprint 
 from biobert_embedding.embedding import BiobertEmbedding
-import numpy as np
+import torch 
 
 import chromadb
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
+from sentence_transformers import SentenceTransformer
 
-# Define a custom embedding function for BioBert
+
 class BioBertEmbeddingFunction(EmbeddingFunction):
     def __init__(self):
         self.biobert = BiobertEmbedding()
 
     def __call__(self, texts: Documents) -> Embeddings:
-        return np.array(([[self.biobert.sentence_vector(chunk)] for chunk in texts])).tolist()
-    
+        embeddings = []
+        for text in texts:
+            tensor = self.biobert.sentence_vector((str(text)))
+            if isinstance(tensor, torch.Tensor):
+                # Convert tensor to numpy array and then to a list
+                embedding = tensor.detach().cpu().numpy().tolist()
+            else:
+                embedding = tensor  # Assuming it is already in the correct format
+            embeddings.append(embedding)
+        return embeddings
+
+
+
+class Qwen7bFunction(EmbeddingFunction):
+    def __init__(self):
+        self.model = SentenceTransformer("Alibaba-NLP/gte-Qwen2-7B-instruct", trust_remote_code=True)
+        self.model.max_seq_length = 8192
+    def __call__(self, texts: Documents) -> Embeddings:
+        embeddings = []
+        for text in texts:
+            tensor = self.model.embed(str(text))
+            if isinstance(tensor, torch.Tensor):
+                # Convert tensor to numpy array and then to a list
+                embedding = tensor.detach().cpu().numpy().tolist()
+            else:
+                embedding = tensor  # Assuming it is already in the correct format
+            embeddings.append(embedding)
+        return embeddings
+
 
 def load_text_chunks(pickle_file):
+    # Refer to extract_tables_chunks
     """
     Displays first tables text chunk stored in pickle file.
+    text_chunks = [(text, id), ...]
     """
     with open(pickle_file, "rb") as f:
         text_chunks = pickle.load(f)
@@ -29,7 +59,7 @@ def load_text_chunks(pickle_file):
 
 def create_chromadb(embedding_type: str, text_chunks):
     """
-    embedding_type can be biobert / biomistral
+    embedding_type can be biobert / biomistral / qwen7b
     text_chunks = [("document", "id"), ...]
     """
 
@@ -39,15 +69,28 @@ def create_chromadb(embedding_type: str, text_chunks):
 
     if embedding_type=="biobert":
         client.delete_collection("biobert-collection")
-        collection=client.create_collection(name="biobert-collection",embedding_function=BioBertEmbeddingFunction())
-    else:
-        collection=client.create_collection(name="biomistral-collection",embedding_function=BioBertEmbeddingFunction())
+        collection=client.create_collection(name="biobert-collection", embedding_function=BioBertEmbeddingFunction())
+    if embedding_type=="qwen7b":
+        #client.delete_collection("qwen7b-collection")
+        #collection=client.create_collection(name="qwen7b-collection", embedding_function=Qwen7bFunction())
 
     ids = [text_chunk[1] for text_chunk in text_chunks]
     docs = [text_chunk[0] for text_chunk in text_chunks]
 
+    assert len(ids) == len(docs)
+
     collection.add(documents=docs, ids=ids)
-    collection.peek()
+    return collection
+
+def search_chromadb(embedding_type: str, collection, query, top_k=5):
+    if embedding_type=="biobert":
+        embedding_function=BioBertEmbeddingFunction()
+    else:
+        embedding_function=BioBertEmbeddingFunction()
+    
+    query_embedding = embedding_function([query])[0]
+    results = collection.query(query_embeddings=[query_embedding], n_results=top_k)
+    return results
 
 
 def main():
@@ -60,7 +103,10 @@ def main():
     tables_path = config.get("tables_path")    
     text_chunks = load_text_chunks(tables_path)
 
-    create_chromadb("biobert", text_chunks)
+    #collection = create_chromadb("qwen7b", text_chunks) 
+
+    #query = "Humerus et Glène vs Humérus (Ref)"
+    #print(search_chromadb("qwen7b", collection, query)["documents"])
     
 if __name__ == "__main__":
     main()
