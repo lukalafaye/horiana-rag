@@ -25,7 +25,14 @@ dist/
 .DS_Store
 Thumbs.db
 
+# pytest cache
 .pytest_cache/
+
+# vscode config
 .vscode
+
+# Pickle files
 *.pkl
-*.json
+
+# Huggingface models
+models/

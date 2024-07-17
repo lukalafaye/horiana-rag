@@ -9,12 +9,13 @@ setup(
         'PyPDF2',
         'python-docx',
         'scikit-learn',
-        'numpy',
+        'numpy<2',
         'lxml',
         'scipy',
         'pandas',
-        'six'
-    ],
+        'six',
+        'biobert-embedding @ git+https://github.com/lukalafaye/biobert_embedding'
+        ],
     extras_require={
         'dev': [
             'pytest',

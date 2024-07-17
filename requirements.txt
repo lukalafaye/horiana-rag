@@ -4,6 +4,8 @@ python-docx
 scikit-learn
 pandas
 six
+biobert-embedding @ git+https://github.com/lukalafaye/biobert_embedding
+numpy<2
 
 # Development and testing dependencies
 pytest
