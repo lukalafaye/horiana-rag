@@ -23,13 +23,13 @@ setup(
             'twine'
         ]
     },
-    entry_points={
-        'console_scripts': [
-            'preprocess=rag.preprocess:main',  # Entry point updated to call `main` function
+#    entry_points={
+#        'console_scripts': [
+#            'preprocess=rag.preprocess:main',  # Entry point updated to call `main` function
 #            'embed=rag.embed:main',  # Entry point updated to call `main` function
 #            'query=rag.query:main',  # Entry point updated to call `main` function
-        ],
-    },
+#        ],
+#    },
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',

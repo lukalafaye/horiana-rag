@@ -26,3 +26,6 @@ dist/
 Thumbs.db
 
 .pytest_cache/
+.vscode
+*.pkl
+*.json
