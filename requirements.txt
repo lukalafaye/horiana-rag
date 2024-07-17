@@ -6,6 +6,7 @@ pandas
 six
 biobert-embedding @ git+https://github.com/lukalafaye/biobert_embedding
 numpy<2
+langchain_chroma
 
 # Development and testing dependencies
 pytest

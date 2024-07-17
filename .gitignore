@@ -36,3 +36,7 @@ Thumbs.db
 
 # Huggingface models
 models/
+
+# Logs and chromadb files
+app.log
+*.sqlite3

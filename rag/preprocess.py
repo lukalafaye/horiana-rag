@@ -23,7 +23,7 @@ def extract_tables_chunks(pickle_file, tables_output_path):
     with open(pickle_file, "rb") as f:
         document = pickle.load(f)
 
-    text_chunks = [" ".join(document["tables"][key][:2]) + '\n'.join(document["tables"][key][2].iloc[:, 0].astype(str).tolist()) for key in document["tables"].keys()]
+    text_chunks = [(" ".join(document["tables"][key][:2]) + '\n'.join(document["tables"][key][2].iloc[:, 0].astype(str).tolist()), key) for key in document["tables"].keys()]
 
     with open(tables_output_path, "wb") as f:
         pickle.dump(text_chunks, f)

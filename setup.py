@@ -14,7 +14,8 @@ setup(
         'scipy',
         'pandas',
         'six',
-        'biobert-embedding @ git+https://github.com/lukalafaye/biobert_embedding'
+        'biobert-embedding @ git+https://github.com/lukalafaye/biobert_embedding',
+        'langchain_chroma'
         ],
     extras_require={
         'dev': [

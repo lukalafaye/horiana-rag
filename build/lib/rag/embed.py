@@ -12,7 +12,11 @@ def display_tables(pickle_file):
     with open(pickle_file, "rb") as f:
         tables = pickle.load(f)
 
-    #pprint(tables[0])
+    text = tables[0]
+    biobert = BiobertEmbedding()
+
+    print(biobert.sentence_vector(text))
+
 
 def main():
     config_path = Path('.vscode/config.json')
