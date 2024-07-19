@@ -26,25 +26,6 @@ class BioBertEmbeddingFunction(EmbeddingFunction):
             embeddings.append(embedding)
         return embeddings
 
-
-
-class Qwen7bFunction(EmbeddingFunction):
-    def __init__(self):
-        self.model = SentenceTransformer("Alibaba-NLP/gte-Qwen2-7B-instruct", trust_remote_code=True)
-        self.model.max_seq_length = 8192
-    def __call__(self, texts: Documents) -> Embeddings:
-        embeddings = []
-        for text in texts:
-            tensor = self.model.embed(str(text))
-            if isinstance(tensor, torch.Tensor):
-                # Convert tensor to numpy array and then to a list
-                embedding = tensor.detach().cpu().numpy().tolist()
-            else:
-                embedding = tensor  # Assuming it is already in the correct format
-            embeddings.append(embedding)
-        return embeddings
-
-
 def load_text_chunks(pickle_file):
     # Refer to extract_tables_chunks
     """
@@ -70,9 +51,6 @@ def create_chromadb(embedding_type: str, text_chunks):
     if embedding_type=="biobert":
         client.delete_collection("biobert-collection")
         collection=client.create_collection(name="biobert-collection", embedding_function=BioBertEmbeddingFunction())
-    if embedding_type=="qwen7b":
-        #client.delete_collection("qwen7b-collection")
-        #collection=client.create_collection(name="qwen7b-collection", embedding_function=Qwen7bFunction())
 
     ids = [text_chunk[1] for text_chunk in text_chunks]
     docs = [text_chunk[0] for text_chunk in text_chunks]
@@ -103,10 +81,10 @@ def main():
     tables_path = config.get("tables_path")    
     text_chunks = load_text_chunks(tables_path)
 
-    #collection = create_chromadb("qwen7b", text_chunks) 
+    collection = create_chromadb("biobert", text_chunks) 
 
-    #query = "Humerus et Glène vs Humérus (Ref)"
-    #print(search_chromadb("qwen7b", collection, query)["documents"])
-    
+    query = "Humerus et Glène vs Humérus (Ref)"
+    pprint(search_chromadb("biobert", collection, query)["documents"])
+
 if __name__ == "__main__":
     main()
