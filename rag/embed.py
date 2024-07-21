@@ -44,13 +44,18 @@ def create_chromadb(embedding_type: str, text_chunks):
     text_chunks = [("document", "id"), ...]
     """
 
-    client = chromadb.PersistentClient(path=".")
+    client = chromadb.PersistentClient(path="chromadb-client")
     print("Client heartbeat: ", client.heartbeat())
 
 
     if embedding_type=="biobert":
-        client.delete_collection("biobert-collection")
-        collection=client.create_collection(name="biobert-collection", embedding_function=BioBertEmbeddingFunction())
+        existing_collections = client.list_collections()
+        collection_name = "biobert-collection"
+        
+        if collection_name in existing_collections:
+            client.delete_collection(collection_name)
+
+        collection=client.create_collection(name=collection_name, embedding_function=BioBertEmbeddingFunction())
 
     ids = [text_chunk[1] for text_chunk in text_chunks]
     docs = [text_chunk[0] for text_chunk in text_chunks]

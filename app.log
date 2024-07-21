@@ -1,7 +1,7 @@
-2024-07-19 09:53:13,069 Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
-2024-07-19 09:53:13,179 loading vocabulary file models/vocab.txt
-2024-07-19 09:53:13,199 loading archive file models/
-2024-07-19 09:53:13,199 Model config {
+2024-07-19 10:00:52,113 Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-07-19 10:00:52,191 loading vocabulary file models/vocab.txt
+2024-07-19 10:00:52,207 loading archive file models/
+2024-07-19 10:00:52,208 Model config {
   "attention_probs_dropout_prob": 0.1,
   "hidden_act": "gelu",
   "hidden_dropout_prob": 0.1,
@@ -15,88 +15,88 @@
   "vocab_size": 28996
 }
 
-2024-07-19 09:53:14,111 Initialization Done !!
-2024-07-19 09:53:14,133 Taking last layer embedding of each word.
-2024-07-19 09:53:14,133 Mean of all words for sentence embedding.
-2024-07-19 09:53:14,217 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:14,218 Taking last layer embedding of each word.
-2024-07-19 09:53:14,218 Mean of all words for sentence embedding.
-2024-07-19 09:53:14,311 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:14,311 Taking last layer embedding of each word.
-2024-07-19 09:53:14,311 Mean of all words for sentence embedding.
-2024-07-19 09:53:14,437 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:14,437 Taking last layer embedding of each word.
-2024-07-19 09:53:14,437 Mean of all words for sentence embedding.
-2024-07-19 09:53:14,595 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:14,595 Taking last layer embedding of each word.
-2024-07-19 09:53:14,595 Mean of all words for sentence embedding.
-2024-07-19 09:53:14,693 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:14,694 Taking last layer embedding of each word.
-2024-07-19 09:53:14,694 Mean of all words for sentence embedding.
-2024-07-19 09:53:14,857 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:14,857 Taking last layer embedding of each word.
-2024-07-19 09:53:14,857 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,068 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,069 Taking last layer embedding of each word.
-2024-07-19 09:53:15,069 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,309 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,310 Taking last layer embedding of each word.
-2024-07-19 09:53:15,310 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,404 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,404 Taking last layer embedding of each word.
-2024-07-19 09:53:15,404 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,493 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,493 Taking last layer embedding of each word.
-2024-07-19 09:53:15,493 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,582 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,582 Taking last layer embedding of each word.
-2024-07-19 09:53:15,582 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,735 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,735 Taking last layer embedding of each word.
-2024-07-19 09:53:15,735 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,897 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,897 Taking last layer embedding of each word.
-2024-07-19 09:53:15,897 Mean of all words for sentence embedding.
-2024-07-19 09:53:15,995 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:15,996 Taking last layer embedding of each word.
-2024-07-19 09:53:15,996 Mean of all words for sentence embedding.
-2024-07-19 09:53:16,089 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:16,089 Taking last layer embedding of each word.
-2024-07-19 09:53:16,089 Mean of all words for sentence embedding.
-2024-07-19 09:53:16,191 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:16,191 Taking last layer embedding of each word.
-2024-07-19 09:53:16,191 Mean of all words for sentence embedding.
-2024-07-19 09:53:16,367 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:16,367 Taking last layer embedding of each word.
-2024-07-19 09:53:16,367 Mean of all words for sentence embedding.
-2024-07-19 09:53:16,564 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:16,564 Taking last layer embedding of each word.
-2024-07-19 09:53:16,564 Mean of all words for sentence embedding.
-2024-07-19 09:53:16,684 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:16,684 Taking last layer embedding of each word.
-2024-07-19 09:53:16,684 Mean of all words for sentence embedding.
-2024-07-19 09:53:16,909 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:16,909 Taking last layer embedding of each word.
-2024-07-19 09:53:16,909 Mean of all words for sentence embedding.
-2024-07-19 09:53:17,000 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:17,000 Taking last layer embedding of each word.
-2024-07-19 09:53:17,000 Mean of all words for sentence embedding.
-2024-07-19 09:53:17,087 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:17,087 Taking last layer embedding of each word.
-2024-07-19 09:53:17,087 Mean of all words for sentence embedding.
-2024-07-19 09:53:17,211 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:17,211 Taking last layer embedding of each word.
-2024-07-19 09:53:17,211 Mean of all words for sentence embedding.
-2024-07-19 09:53:17,437 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:17,437 Taking last layer embedding of each word.
-2024-07-19 09:53:17,437 Mean of all words for sentence embedding.
-2024-07-19 09:53:17,534 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:17,534 Taking last layer embedding of each word.
-2024-07-19 09:53:17,534 Mean of all words for sentence embedding.
-2024-07-19 09:53:17,624 Shape of Sentence Embeddings = 768
-2024-07-19 09:53:17,662 loading vocabulary file models/vocab.txt
-2024-07-19 09:53:17,680 loading archive file models/
-2024-07-19 09:53:17,680 Model config {
+2024-07-19 10:00:53,070 Initialization Done !!
+2024-07-19 10:00:53,093 Taking last layer embedding of each word.
+2024-07-19 10:00:53,093 Mean of all words for sentence embedding.
+2024-07-19 10:00:53,177 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:53,177 Taking last layer embedding of each word.
+2024-07-19 10:00:53,177 Mean of all words for sentence embedding.
+2024-07-19 10:00:53,275 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:53,275 Taking last layer embedding of each word.
+2024-07-19 10:00:53,275 Mean of all words for sentence embedding.
+2024-07-19 10:00:53,404 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:53,404 Taking last layer embedding of each word.
+2024-07-19 10:00:53,404 Mean of all words for sentence embedding.
+2024-07-19 10:00:53,580 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:53,580 Taking last layer embedding of each word.
+2024-07-19 10:00:53,580 Mean of all words for sentence embedding.
+2024-07-19 10:00:53,675 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:53,675 Taking last layer embedding of each word.
+2024-07-19 10:00:53,675 Mean of all words for sentence embedding.
+2024-07-19 10:00:53,848 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:53,848 Taking last layer embedding of each word.
+2024-07-19 10:00:53,848 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,057 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,057 Taking last layer embedding of each word.
+2024-07-19 10:00:54,057 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,316 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,317 Taking last layer embedding of each word.
+2024-07-19 10:00:54,317 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,409 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,410 Taking last layer embedding of each word.
+2024-07-19 10:00:54,410 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,496 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,496 Taking last layer embedding of each word.
+2024-07-19 10:00:54,496 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,587 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,587 Taking last layer embedding of each word.
+2024-07-19 10:00:54,587 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,736 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,736 Taking last layer embedding of each word.
+2024-07-19 10:00:54,736 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,895 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,895 Taking last layer embedding of each word.
+2024-07-19 10:00:54,895 Mean of all words for sentence embedding.
+2024-07-19 10:00:54,997 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:54,998 Taking last layer embedding of each word.
+2024-07-19 10:00:54,998 Mean of all words for sentence embedding.
+2024-07-19 10:00:55,093 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:55,093 Taking last layer embedding of each word.
+2024-07-19 10:00:55,093 Mean of all words for sentence embedding.
+2024-07-19 10:00:55,200 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:55,200 Taking last layer embedding of each word.
+2024-07-19 10:00:55,200 Mean of all words for sentence embedding.
+2024-07-19 10:00:55,392 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:55,392 Taking last layer embedding of each word.
+2024-07-19 10:00:55,392 Mean of all words for sentence embedding.
+2024-07-19 10:00:55,600 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:55,600 Taking last layer embedding of each word.
+2024-07-19 10:00:55,600 Mean of all words for sentence embedding.
+2024-07-19 10:00:55,736 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:55,738 Taking last layer embedding of each word.
+2024-07-19 10:00:55,738 Mean of all words for sentence embedding.
+2024-07-19 10:00:55,976 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:55,978 Taking last layer embedding of each word.
+2024-07-19 10:00:55,978 Mean of all words for sentence embedding.
+2024-07-19 10:00:56,069 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:56,069 Taking last layer embedding of each word.
+2024-07-19 10:00:56,069 Mean of all words for sentence embedding.
+2024-07-19 10:00:56,155 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:56,155 Taking last layer embedding of each word.
+2024-07-19 10:00:56,155 Mean of all words for sentence embedding.
+2024-07-19 10:00:56,279 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:56,279 Taking last layer embedding of each word.
+2024-07-19 10:00:56,279 Mean of all words for sentence embedding.
+2024-07-19 10:00:56,504 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:56,505 Taking last layer embedding of each word.
+2024-07-19 10:00:56,505 Mean of all words for sentence embedding.
+2024-07-19 10:00:56,599 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:56,599 Taking last layer embedding of each word.
+2024-07-19 10:00:56,600 Mean of all words for sentence embedding.
+2024-07-19 10:00:56,687 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:56,738 loading vocabulary file models/vocab.txt
+2024-07-19 10:00:56,757 loading archive file models/
+2024-07-19 10:00:56,757 Model config {
   "attention_probs_dropout_prob": 0.1,
   "hidden_act": "gelu",
   "hidden_dropout_prob": 0.1,
@@ -110,7 +110,7 @@
   "vocab_size": 28996
 }
 
-2024-07-19 09:53:18,555 Initialization Done !!
-2024-07-19 09:53:18,555 Taking last layer embedding of each word.
-2024-07-19 09:53:18,555 Mean of all words for sentence embedding.
-2024-07-19 09:53:18,593 Shape of Sentence Embeddings = 768
+2024-07-19 10:00:57,661 Initialization Done !!
+2024-07-19 10:00:57,661 Taking last layer embedding of each word.
+2024-07-19 10:00:57,661 Mean of all words for sentence embedding.
+2024-07-19 10:00:57,696 Shape of Sentence Embeddings = 768

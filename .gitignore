@@ -40,3 +40,7 @@ models/
 # Logs and chromadb files
 app.log
 *.sqlite3
+
+
+.chroma_env
+chroma.log
