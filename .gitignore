@@ -41,6 +41,6 @@ models/
 app.log
 *.sqlite3
 
-
+# Chromadb password and logs
 .chroma_env
 chroma.log

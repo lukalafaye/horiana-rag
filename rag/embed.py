@@ -4,7 +4,9 @@ import json
 from pprint import pprint 
 from biobert_embedding.embedding import BiobertEmbedding
 import torch 
-
+from chromadb.config import Settings
+from dotenv import load_dotenv
+import os
 import chromadb
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from sentence_transformers import SentenceTransformer
@@ -26,10 +28,26 @@ class BioBertEmbeddingFunction(EmbeddingFunction):
             embeddings.append(embedding)
         return embeddings
 
+def connect_to_server():
+    """"
+    Connects to chroma db server already running...
+    """
+    load_dotenv('.chroma_env')
+    chroma_client_auth_provider = os.getenv("CHROMA_CLIENT_AUTHN_CREDENTIALS")
+    chroma_client_auth_credentials = os.getenv("CHROMA_CLIENT_AUTHN_PROVIDER")
+
+    client = chromadb.HttpClient(
+    settings=Settings(
+        chroma_client_auth_provider=chroma_client_auth_provider,
+        chroma_client_auth_credentials=chroma_client_auth_credentials)
+    )
+
+    return client
+
 def load_text_chunks(pickle_file):
     # Refer to extract_tables_chunks
     """
-    Displays first tables text chunk stored in pickle file.
+    Loads tables text chunks stored in pickle file.
     text_chunks = [(text, id), ...]
     """
     with open(pickle_file, "rb") as f:
@@ -38,16 +56,16 @@ def load_text_chunks(pickle_file):
     return text_chunks
 
 
-def create_chromadb(embedding_type: str, text_chunks):
+def update_chromadb(text_chunks):
     """
     embedding_type can be biobert / biomistral / qwen7b
     text_chunks = [("document", "id"), ...]
     """
 
-    client = chromadb.PersistentClient(path="chromadb-client")
+    client = connect_to_server()
     print("Client heartbeat: ", client.heartbeat())
 
-
+    embedding_type = "biobert"
     if embedding_type=="biobert":
         existing_collections = client.list_collections()
         collection_name = "biobert-collection"
@@ -86,7 +104,7 @@ def main():
     tables_path = config.get("tables_path")    
     text_chunks = load_text_chunks(tables_path)
 
-    collection = create_chromadb("biobert", text_chunks) 
+    collection = update_chromadb("biobert", text_chunks)  # adds some text chunks to chromadb
 
     query = "Humerus et Glène vs Humérus (Ref)"
     pprint(search_chromadb("biobert", collection, query)["documents"])
