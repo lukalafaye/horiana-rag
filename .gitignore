@@ -5,6 +5,7 @@ __pycache__/
 
 # Ignore build directories
 build/
+build/*
 
 # Ignore confidential documents
 confidential/
@@ -16,7 +17,7 @@ confidential/
 models/
 
 # Ignore chromadb logs and data
-app.log
+*.log
 *.sqlite3
 
 # Ignore tar archives
