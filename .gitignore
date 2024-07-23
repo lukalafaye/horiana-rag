@@ -1,46 +1,33 @@
-# Ignore virtual environment directory
-venv/
+# Ignore pytest and python cache
+.pytest_cache/
+*.pyc
+__pycache__/
+
+# Ignore build directories
+build/
 
 # Ignore confidential documents
 confidential/
 
-# Ignore Python bytecode
-*.pyc
-__pycache__/
-
-# Ignore setup.py egg info
+# Ignore egg info
 *.egg-info/
 
-# Ignore build directories
-build/
-dist/
+# Ignore Huggingface models
+models/
 
-# Ignore Jupyter Notebook checkpoints
-.ipynb_checkpoints/
+# Ignore chromadb logs and data
+app.log
+*.sqlite3
 
-# Ignore local .env files
-.env
+# Ignore tar archives
+*.tar 
+
+# Ignore Pickle files
+*.pkl 
 
 # Ignore system-specific files
 .DS_Store
 Thumbs.db
 
-# pytest cache
-.pytest_cache/
-
-# vscode config
-.vscode
-
 # Pickle files
 *.pkl
-
-# Huggingface models
-models/
-
-# Logs and chromadb files
-app.log
-*.sqlite3
-
-# Chromadb password and logs
-.chroma_env
-chroma.log

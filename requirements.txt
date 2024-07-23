@@ -11,3 +11,5 @@ sentence_transformers
 
 # Development and testing dependencies
 pytest
+black
+twine

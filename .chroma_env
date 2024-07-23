@@ -1,0 +1,2 @@
+CHROMA_CLIENT_AUTHN_CREDENTIALS="chr0ma-t0k3n" # secret token, same as CHROMA_SERVER_AUTHN_CREDENTIALS
+CHROMA_CLIENT_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthClientProvider" # same as CHROMA_SERVER_AUTHN_PROVIDER

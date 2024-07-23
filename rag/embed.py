@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 import os
 import chromadb
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
-from sentence_transformers import SentenceTransformer
 
+docker = True
 
 class BioBertEmbeddingFunction(EmbeddingFunction):
     def __init__(self):
@@ -32,14 +32,22 @@ def connect_to_server():
     """"
     Connects to chroma db server already running...
     """
-    load_dotenv('.chroma_env')
-    chroma_client_auth_provider = os.getenv("CHROMA_CLIENT_AUTHN_CREDENTIALS")
-    chroma_client_auth_credentials = os.getenv("CHROMA_CLIENT_AUTHN_PROVIDER")
+
+    chroma_env = '.chroma_env'
+    if docker:
+        chroma_env = '/app/' + chroma_env
+    
+    load_dotenv(chroma_env)
+    chroma_client_auth_credentials= os.getenv("CHROMA_CLIENT_AUTHN_CREDENTIALS")
+    chroma_client_auth_provider = os.getenv("CHROMA_CLIENT_AUTHN_PROVIDER")
+
+    print(chroma_client_auth_provider, chroma_client_auth_credentials)
 
     client = chromadb.HttpClient(
-    settings=Settings(
-        chroma_client_auth_provider=chroma_client_auth_provider,
-        chroma_client_auth_credentials=chroma_client_auth_credentials)
+        settings=Settings(
+            chroma_client_auth_provider=chroma_client_auth_provider,
+            chroma_client_auth_credentials=chroma_client_auth_credentials
+        )
     )
 
     return client
@@ -95,8 +103,11 @@ def search_chromadb(embedding_type: str, collection, query, top_k=5):
 
 
 def main():
-    config_path = Path('.vscode/config.json')
 
+    config_path = 'config.json'
+    if docker:
+        config_path = '/app/' + config_path
+    
     # Lire le fichier de configuration JSON
     with open(config_path, 'r') as f:
         config = json.load(f)
@@ -104,7 +115,7 @@ def main():
     tables_path = config.get("tables_path")    
     text_chunks = load_text_chunks(tables_path)
 
-    collection = update_chromadb("biobert", text_chunks)  # adds some text chunks to chromadb
+    collection = update_chromadb(text_chunks)  # adds some text chunks to chromadb
 
     query = "Humerus et Glène vs Humérus (Ref)"
     pprint(search_chromadb("biobert", collection, query)["documents"])

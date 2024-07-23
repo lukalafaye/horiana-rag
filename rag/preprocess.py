@@ -5,6 +5,7 @@ import json
 
 from rag.extractors.utils import process_files  # Updated import path
 
+docker = True
 
 def preprocess(pdf_path, doc_path, output_path):
     """
@@ -30,8 +31,9 @@ def extract_tables_chunks(pickle_file, tables_output_path):
 
 def main():
     # Chemin vers le fichier de configuration JSON
-    config_path = Path('.vscode/config.json')
-
+    config_path = 'config.json'
+    if docker:
+        config_path = '/app/' + config_path
     # Lire le fichier de configuration JSON
     with open(config_path, 'r') as f:
         config = json.load(f)
@@ -48,7 +50,6 @@ def main():
     pdf_path = Path(pdf_path)
     doc_path = Path(doc_path)
     output_path = Path(output_path)
-
 
     # Exécuter la fonction preprocess
     preprocess(pdf_path, doc_path, output_path)
