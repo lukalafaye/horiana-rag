@@ -3,34 +3,106 @@
 A Python project for Retrieval-Augmented Generation (RAG) for document processing and embedding.
 Development in progress.
 
-## Installation
+Project planning: [https://almanac.io/docs/planning-hBCvSPzpM3keThdXXrDv6SF7fsEs9N9p](https://almanac.io/docs/planning-hBCvSPzpM3keThdXXrDv6SF7fsEs9N9p)
 
-1) Change config.json with files path:
+## Llama 3 server setup
+
+1. Request access to Llama 3 70b on hugging face → [https://huggingface.co/meta-llama/Meta-Llama-3-70B](https://huggingface.co/meta-llama/Meta-Llama-3-70B)
+2. Create access token in hugging face settings
+3. Request ec2 quotas for all no demand ec2 instances -> [https://aws.amazon.com/getting-started/hands-on/request-service-quota-increase/](https://aws.amazon.com/getting-started/hands-on/request-service-quota-increase/). Note: Contacted sales service by email because they would not allow 95 vCPUs on my personal account. On demand != spot instances...
+4. Create g5.??xlarge on demand ec2 instance -> Used AMI: Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.3.0 (Ubuntu 20.04) 20240716, 128gb ebs default + 128gb ebs additional storage (both gpt3), update throughput for additional storage to max 1000Mib/s. Use default security + generated SSH key. Choose ?? based on LLM needs.
+5. Connect to server (click connect) and use ssh key
+6. Properly attach additional storage in file system -> [https://docs.aws.amazon.com/ebs/latest/userguide/ebs-using-volumes.html](https://docs.aws.amazon.com/ebs/latest/userguide/ebs-using-volumes.html). Note: Make sure to change fstab to automatically attach storage on every reboot.
+7. Run `sudo chown -R $USER:$USER /data` to fix permission issues
+8. Update and upgrade system `sudo apt update && sudo apt upgrade`
+9. `sudo apt install python3-apt` 
+10. Create python environment: `cd /data/ && python -m venv venv && source venv/bin/activate` 
+11. Install needed pip packages: `pip install vllm ray huggingface_hub[cli]`
+12. Login to huggingface using access token: `huggingface-cli login`
+
+### Run Llama3 with vLLM (cost++)
 
 ```
-{
-    "pdf_path": "confidential/file.pdf",
-    "doc_path": "confidential/file.docx",
-    "output_path": "out.pkl",
-    "tables_path": "tables.pkl"
-}
+python -m vllm.entrypoints.openai.api_server --model meta-llama/Meta-Llama-3-70B-Instruct --tensor-parallel-size 8 --download-dir /data/ --api_key SecretToken # 8 gpus
 ```
 
-2) Update credentials in .chroma_env:
+### Run quantized Llama 3 with llama cpp (cost--)
+
+Download Q4 from [https://huggingface.co/lmstudio-community/Meta-Llama-3-70B-Instruct-GGUF](https://huggingface.co/lmstudio-community/Meta-Llama-3-70B-Instruct-GGUF) to `/data/`.
+
+Here is a download python script:
 
 ```
-CHROMA_SERVER_AUTHN_CREDENTIALS="secret token"
-CHROMA_SERVER_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider"
-CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization"
+from huggingface_hub import hf_hub_download
 
-CHROMA_CLIENT_AUTHN_CREDENTIALS="secret token"
-CHROMA_CLIENT_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthClientProvider"    
+# Specify the repository and the file you want to download
+repo_id = 'lmstudio-community/Meta-Llama-3-70B-Instruct-GGUF'
+filename = 'Meta-Llama-3-70B-Instruct-Q4_K_M.gguf'
+
+# Download the file
+file_path = hf_hub_download(repo_id=repo_id, filename=filename, cache_dir='/data/')
+print(f"Downloaded file saved to {file_path}")
 ```
 
-3) Run chroma server with docker: https://cookbook.chromadb.dev/security/auth/#token-authentication
-docker run --rm -e CHROMA_SERVER_AUTHN_CREDENTIALS="chr0ma-t0k3n"  -e CHROMA_SERVER_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider"  -e CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization"  -p 8000:8000  chromadb/chroma:latest
+Install and build `llama cpp`.
 
-chr0ma-t0k3n needs to be the same token in config.json!
+```
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+make llama-server LLAMA_CUDA=1
+```
 
-4) docker build -t my-python-app .
-docker run -it --network="host" --rm -v $(pwd):/app my-python-app bash
+Run model server with `./llama-server -m /data/models/Meta-Llama-3-70B-Instruct-Q4_K_M.gguf --gpu-layers 196 --split-mode layer --tensor-split 1,1,1,1 --port 8000 --api-key Secret Token`.
+
+### Calling model
+
+Call from public address with:
+
+```
+from openai import OpenAI
+client = OpenAI(
+    base_url="http://ec2-XX-XXX-XXX-XX.us-east-2.compute.amazonaws.com:8000/v1/",
+    api_key="SecretToken",
+)
+
+completion = client.chat.completions.create(
+  model="NousResearch/Meta-Llama-3-8B-Instruct",
+  messages=[
+    {"role": "user", "content": "Write me an essay about orthopedics."}
+  ]
+)
+
+print(completion.choices[0].message)
+```
+
+### Notes
+
+Note: Upload files with `scp -r -i /home/linus/.ssh/aws/luka.pem FilesFolder/ ubuntu@ec2-XX-XXX-XXX-XX.us-east-2.compute.amazonaws.com:/data/`.
+
+Note: Get a permanent IP at [https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
+
+
+## Client
+
+1) Run chroma server with docker
+
+Instructions from [https://cookbook.chromadb.dev/security/auth/#token-authentication](https://cookbook.chromadb.dev/security/auth/#token-authentication).
+
+```
+docker run --rm -e CHROMA_SERVER_AUTHN_CREDENTIALS="chr0ma-t0k3n" -e CHROMA_SERVER_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider" -e CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization" -p 8000:8000  chromadb/chroma:latest
+```
+
+Note: `chr0ma-t0k3n` is used in the client config.json!
+
+2) Run project container
+
+```
+# docker build -t horiana-rag . # OPTIONAL - used to rebuild the image
+docker run -it --network="host" --rm -v $(pwd):/app horiana-rag bash # --network option only works on Linux
+```
+
+3) Run project scripts
+
+- `preprocess.py` -> extracts document dictionnary and tables from both pdf and docx files, stores output to pickle files
+- `embed.py` -> retrieves tables pickle file and adds table to chromadb (running from step 1)
+- 
