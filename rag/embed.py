@@ -1,34 +1,44 @@
 import pickle 
-from pathlib import Path
 import json 
-from pprint import pprint 
-from biobert_embedding.embedding import BiobertEmbedding
-import torch 
 from chromadb.config import Settings
 from dotenv import load_dotenv
 import os
 import chromadb
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
+from sentence_transformers import SentenceTransformer
+import pandas as pd 
 
 docker = True
+stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True).cuda()
 
-class BioBertEmbeddingFunction(EmbeddingFunction):
+def load_tables_chunks(pickle_file):
+    # Refer to extract_tables_chunks
+    """
+    Loads tables text chunks stored in pickle file.
+    text_chunks = [(text, id), ...]
+    """
+    with open(pickle_file, "rb") as f:
+        text_chunks = pickle.load(f)
+
+    return text_chunks
+
+def load_abstracts_chunks(csv_file):
+    # returns dataframe
+    # pubmed_id,title,keywords,journal,abstract,conclusions,methods,results,copyrights,doi,publication_date,authors
+    return pd.read_csv(csv_file)
+
+class StellaEmbeddingFunction(EmbeddingFunction):
     def __init__(self):
-        self.biobert = BiobertEmbedding()
+        self.stella = stella
 
     def __call__(self, texts: Documents) -> Embeddings:
         embeddings = []
         for text in texts:
-            tensor = self.biobert.sentence_vector((str(text)))
-            if isinstance(tensor, torch.Tensor):
-                # Convert tensor to numpy array and then to a list
-                embedding = tensor.detach().cpu().numpy().tolist()
-            else:
-                embedding = tensor  # Assuming it is already in the correct format
-            embeddings.append(embedding)
+            embedding_array = self.stella.encode((str(text)))
+            embeddings.append(embedding_array.tolist())
         return embeddings
 
-def connect_to_server():
+def connect_to_chromadb():
     """"
     Connects to chroma db server already running...
     """
@@ -52,58 +62,44 @@ def connect_to_server():
 
     return client
 
-def load_text_chunks(pickle_file):
-    # Refer to extract_tables_chunks
+def update_collection(collection_name, tables_chunks):
     """
-    Loads tables text chunks stored in pickle file.
-    text_chunks = [(text, id), ...]
-    """
-    with open(pickle_file, "rb") as f:
-        text_chunks = pickle.load(f)
-
-    return text_chunks
-
-
-def update_chromadb(text_chunks):
-    """
-    embedding_type can be biobert / biomistral / qwen7b
-    text_chunks = [("document", "id"), ...]
+    tables_chunks = [("table text", "id"), ...]
     """
 
-    client = connect_to_server()
+    client = connect_to_chromadb()
     print("Client heartbeat: ", client.heartbeat())
 
-    embedding_type = "biobert"
-    if embedding_type=="biobert":
-        existing_collections = client.list_collections()
-        collection_name = "biobert-collection"
-        
-        if collection_name in existing_collections:
-            client.delete_collection(collection_name)
+    collection = client.get_or_create_collection(name=collection_name, embedding_function=StellaEmbeddingFunction())
 
-        collection=client.create_collection(name=collection_name, embedding_function=BioBertEmbeddingFunction())
-
-    ids = [text_chunk[1] for text_chunk in text_chunks]
-    docs = [text_chunk[0] for text_chunk in text_chunks]
+    ids = [table[1] for table in tables_chunks]
+    docs = [table[0] for table in tables_chunks]
 
     assert len(ids) == len(docs)
 
     collection.add(documents=docs, ids=ids)
+
     return collection
 
-def search_chromadb(embedding_type: str, collection, query, top_k=5):
-    if embedding_type=="biobert":
-        embedding_function=BioBertEmbeddingFunction()
-    else:
-        embedding_function=BioBertEmbeddingFunction()
-    
-    query_embedding = embedding_function([query])[0]
-    results = collection.query(query_embeddings=[query_embedding], n_results=top_k)
-    return results
+def update_abstracts_collection(abstracts_chunks):
+    # Complete with abstacts chunks
 
+    client = connect_to_chromadb()
+    print("Client heartbeat: ", client.heartbeat())
+
+    collection_name = "abstracts"
+    collection = client.get_or_create_collection(name=collection_name, embedding_function=StellaEmbeddingFunction())
+
+    ids = abstracts_chunks['doi'].tolist()
+    docs = abstracts_chunks['abstract'].tolist()
+
+    assert len(ids) == len(docs)
+
+    collection.add(documents=docs, ids=ids)
+
+    return collection
 
 def main():
-
     config_path = 'config.json'
     if docker:
         config_path = '/app/' + config_path
@@ -113,12 +109,16 @@ def main():
         config = json.load(f)
 
     tables_path = config.get("tables_path")    
-    text_chunks = load_text_chunks(tables_path)
+    tables_chunks = load_tables_chunks(tables_path)
 
-    collection = update_chromadb(text_chunks)  # adds some text chunks to chromadb
+    tables_collection = update_collection("tables", tables_chunks)  # adds some text chunks to chromadb
 
-    query = "Humerus et Glène vs Humérus (Ref)"
-    pprint(search_chromadb("biobert", collection, query)["documents"])
+    abstracts_path = config.get("abstracts_path")
+    abstracts_chunks = load_abstracts_chunks(abstracts_path)
+    abstracts_collection = update_collection("abstracts", abstracts_chunks) 
+
+    print(tables_collection.peek())
+    print(abstracts_collection.peek())
 
 if __name__ == "__main__":
     main()
