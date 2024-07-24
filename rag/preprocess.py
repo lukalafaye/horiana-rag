@@ -4,8 +4,9 @@ from pprint import pprint
 import json 
 
 from rag.extractors.utils import process_files  # Updated import path
+from rag.extractors.fetch_abstracts import fetch_from_keywords
 
-docker = True
+docker = False
 
 def preprocess(pdf_path, doc_path, output_path):
     """
@@ -56,6 +57,10 @@ def main():
 
     # Exécuter la fonction read pour afficher le contenu du fichier pickle
     extract_tables_chunks(output_path, tables_path)
+
+    keywords = ["knee", "bucket"]
+    abstractsdf = fetch_from_keywords(keywords)
+    print(abstractsdf.head(2))
     
 if __name__ == "__main__":
     main()

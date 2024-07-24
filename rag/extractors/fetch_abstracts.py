@@ -51,10 +51,7 @@ def fetch_from_keywords(keywords: list[str]):
     articlesPD = pd.DataFrame.from_dict(articleInfo)
     articlesPD.drop_duplicates(subset=['doi'], inplace=True)
 
-    return articlesPD
-
-def save_abstracts(articlesPD):
-
+    # Saving instructions
     config_path = 'config.json'
     if docker:
         config_path = '/app/' + config_path
@@ -65,13 +62,12 @@ def save_abstracts(articlesPD):
 
     abstracts_path = config.get('abstracts_path')
     articlesPD.to_csv(abstracts_path, index = None, header=True)
-    #Print first 10 rows of dataframe
-    #print(articlesPD.head(20))
+
+    return articlesPD
 
 def main():
     keywords = ["knee", "bucket"]
     articlesPD = fetch_from_keywords(keywords)
-    save_abstracts(articlesPD)
 
 if __name__ == "__main__":
     main()
