@@ -97,3 +97,9 @@ Main scripts:
 - `fetch_abstracts.py` -> fetches some abstracts using keywords and saves the dataframe in a local csv file
 - `embed.py` -> retrieves tables pickle file and adds all tables to chromadb 
 - 
+
+## Todo 
+
+* synopsis
+* update kaggle for pdf preprocessing (docx already up2date)
+* update kaggle for pdf+docx preprocessing

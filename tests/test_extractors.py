@@ -61,6 +61,7 @@ def extracted_tables(pdf_metadata_and_text):
     tables = {}
     for study, content in pdf_metadata_and_text.items():
         pages_content = content[1]
+        print("\n\nStudy: ", study, "\n\n")
         tables[study] = extract_tables(pages_content)
     return tables
 
@@ -124,9 +125,9 @@ def test_extract_tables(extracted_tables):
 
 def test_fetch_relevant_tables(docx_tables, extracted_tables):
     for study, table_list in docx_tables.items():
-        print(study)
         relevant_doc_tables = fetch_relevant_tables(table_list)
 
         assert isinstance(relevant_doc_tables, dict)
         assert relevant_doc_tables
+
         assert len(relevant_doc_tables) == len(extracted_tables[study].keys())
