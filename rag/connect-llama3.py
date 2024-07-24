@@ -1,15 +1,39 @@
 import openai
+from dotenv import load_dotenv
+import os
 
-client = openai.OpenAI(
-    base_url="http://ec2-XX-XXX-XXX-XX.us-east-2.compute.amazonaws.com:8080/v1/",
-    api_key="secret"
-)
+docker = False 
 
-completion = client.chat.completions.create(
-    model="Meta-Llama-3-70B-Instruct",
-    messages=[
-        {"role": "user", "content": "Hello!s"}
-    ]
-)
+def connect_to_llama3_server():
+    chroma_env = '.chroma_env'
+    if docker:
+        chroma_env = '/app/' + chroma_env
+    
+    load_dotenv(chroma_env)
+    base_url= os.getenv("BASE_URL")
+    api_key = os.getenv("API_KEY")
 
-print(completion.choices[0].message)
+    client = openai.OpenAI(
+        base_url=base_url,
+        api_key=api_key
+    )
+
+    return client 
+
+def request_completion(client, content):
+    completion = client.chat.completions.create(
+        model="Meta-Llama-3-70B-Instruct",
+        messages=[
+            {"role": "user", "content": completion}
+        ]
+    )
+
+    print(completion.choices[0].message)
+
+def main():
+    client = connect_to_llama3_server()
+    content = "What are the primary differences in pathophysiology and treatment approaches between Type 1 and Type 2 diabetes mellitus, and how do these differences impact long-term management strategies for each condition?"
+    request_completion(client, content)
+
+if __name__ == "__main__":
+    main()

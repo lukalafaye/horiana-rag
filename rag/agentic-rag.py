@@ -1,12 +1,8 @@
-import chromadb
-
+from langchain_text_splitters import CharacterTextSplitter
+from langchain_chroma import Chroma
 
 def main():
-    langchain_chroma = Chroma(
-    client=persistent_client,
-    collection_name="collection_name",
-    embedding_function=embedding_function,
-    )
+    print("ok")
 
 if __name__ == "__main__":
     main()

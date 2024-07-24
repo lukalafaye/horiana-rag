@@ -23,12 +23,13 @@ models/
 # Ignore tar archives
 *.tar 
 
-# Ignore Pickle files
-*.pkl 
-
 # Ignore system-specific files
 .DS_Store
 Thumbs.db
 
-# Pickle files
+# Ignore Pickle and csv files
 *.pkl
+*.csv
+
+# Ignore .llama3_env
+.llama3_env

@@ -20,13 +20,13 @@ Project planning: [https://almanac.io/docs/planning-hBCvSPzpM3keThdXXrDv6SF7fsEs
 11. Install needed pip packages: `pip install vllm ray huggingface_hub[cli]`
 12. Login to huggingface using access token: `huggingface-cli login`
 
-### Run Llama3 with vLLM (cost++)
+### Run Llama3 with vLLM (cost++ g5.24xlarge)
 
 ```
 python -m vllm.entrypoints.openai.api_server --model meta-llama/Meta-Llama-3-70B-Instruct --tensor-parallel-size 8 --download-dir /data/ --api_key SecretToken # 8 gpus
 ```
 
-### Run quantized Llama 3 with llama cpp (cost--)
+### Run quantized Llama 3 with llama cpp (cost-- g5.12xlarge)
 
 Download Q4 from [https://huggingface.co/lmstudio-community/Meta-Llama-3-70B-Instruct-GGUF](https://huggingface.co/lmstudio-community/Meta-Llama-3-70B-Instruct-GGUF) to `/data/`.
 
@@ -44,6 +44,8 @@ file_path = hf_hub_download(repo_id=repo_id, filename=filename, cache_dir='/data
 print(f"Downloaded file saved to {file_path}")
 ```
 
+Move file to `/data/models/Meta-Llama-3-70B-Instruct-Q4_K_M.gguf`.
+
 Install and build `llama cpp`.
 
 ```
@@ -52,39 +54,27 @@ cd llama.cpp
 make llama-server LLAMA_CUDA=1
 ```
 
-Run model server with `./llama-server -m /data/models/Meta-Llama-3-70B-Instruct-Q4_K_M.gguf --gpu-layers 196 --split-mode layer --tensor-split 1,1,1,1 --port 8000 --api-key Secret Token`.
-
-### Calling model
-
-Call from public address with:
-
-```
-from openai import OpenAI
-client = OpenAI(
-    base_url="http://ec2-XX-XXX-XXX-XX.us-east-2.compute.amazonaws.com:8000/v1/",
-    api_key="SecretToken",
-)
-
-completion = client.chat.completions.create(
-  model="NousResearch/Meta-Llama-3-8B-Instruct",
-  messages=[
-    {"role": "user", "content": "Write me an essay about orthopedics."}
-  ]
-)
-
-print(completion.choices[0].message)
-```
+Run model server with `./llama-server -m /data/models/Meta-Llama-3-70B-Instruct-Q4_K_M.gguf --gpu-layers 196 --split-mode layer --tensor-split 1,1,1,1 --port 8000 --api-key secret`.
 
 ### Notes
+
+
+Note: --api-key is used in .llama3_env
+You should create this file with:
+
+```
+BASE_URL="http://ec2-XX-XXX-XXX-XX.us-east-2.compute.amazonaws.com:8080/v1/"
+API_KEY="secret"
+```
 
 Note: Upload files with `scp -r -i /home/linus/.ssh/aws/luka.pem FilesFolder/ ubuntu@ec2-XX-XXX-XXX-XX.us-east-2.compute.amazonaws.com:/data/`.
 
 Note: Get a permanent IP at [https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
 
 
-## Client
+## Chomadb server setup
 
-1) Run chroma server with docker
+Run chroma server with docker
 
 Instructions from [https://cookbook.chromadb.dev/security/auth/#token-authentication](https://cookbook.chromadb.dev/security/auth/#token-authentication).
 
@@ -92,17 +82,18 @@ Instructions from [https://cookbook.chromadb.dev/security/auth/#token-authentica
 docker run --rm -e CHROMA_SERVER_AUTHN_CREDENTIALS="chr0ma-t0k3n" -e CHROMA_SERVER_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider" -e CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization" -p 8000:8000  chromadb/chroma:latest
 ```
 
-Note: `chr0ma-t0k3n` is used in the client config.json!
+Note: `chr0ma-t0k3n` is used in .chroma_env!
 
-2) Run project container
+## Run project container
 
 ```
 # docker build -t horiana-rag . # OPTIONAL - used to rebuild the image
-docker run -it --network="host" --rm -v $(pwd):/app horiana-rag bash # --network option only works on Linux
+docker run -it --network="host" --rm -v $(pwd):/app horiana-rag bash # --network option only works on Linux, this is for dev mode
 ```
 
-3) Run project scripts
+Main scripts:
 
 - `preprocess.py` -> extracts document dictionnary and tables from both pdf and docx files, stores output to pickle files
-- `embed.py` -> retrieves tables pickle file and adds table to chromadb (running from step 1)
+- `fetch_abstracts.py` -> fetches some abstracts using keywords and saves the dataframe in a local csv file
+- `embed.py` -> retrieves tables pickle file and adds all tables to chromadb 
 - 
