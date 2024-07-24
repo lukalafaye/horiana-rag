@@ -33,7 +33,7 @@ def process_files(pdf_path, doc_path):
         "keyresults": keyresults,
         "tables": tables,
     }
-
+    
     assert document["tables"].keys() == relevant_doc_tables.keys()
 
     # Add the relevant DOCX tables to the PDF tables
