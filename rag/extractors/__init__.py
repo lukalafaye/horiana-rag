@@ -9,6 +9,8 @@ from .pdf_extractor import (
 
 from .docx_extractor import extract_tables_from_doc, fetch_relevant_tables
 
+from .fetch_abstracts import fetch_from_keywords
+
 __all__ = [
     "extract_metadata_pages",
     "extract_title",
@@ -18,4 +20,5 @@ __all__ = [
     "extract_information",
     "extract_tables_from_doc",
     "fetch_relevant_tables",
+    "fetch_from_keywords"
 ]
