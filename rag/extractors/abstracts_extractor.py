@@ -1,9 +1,10 @@
 import pandas as pd
 from pymed import PubMed
-import json
+from dotenv import load_dotenv
+import os 
+import json 
 
 docker = False
-
 
 def fetch_from_keywords(keywords: list[str]):
     keywords = [keyword for keyword in keywords if keyword.strip()]
@@ -12,12 +13,22 @@ def fetch_from_keywords(keywords: list[str]):
         return None
 
     pubmed = PubMed(tool="PubMedSearcher", email="myemail@ccc.com")
-    """
-    Monkey patch to use api key
-    my_api_key = 'thisismyapikey'
-    pubmed.parameters.update({'api_key': my_api_key})
+    
+    pubmed_env = ".pubmed_env"
+    if docker:
+        pubmed_env = "/app/" + pubmed_env
+
+    if os.path.exists(pubmed_env):
+        load_dotenv(pubmed_env)
+
+    api_key = os.getenv("API_KEY")
+
+    if api_key is None:
+        raise ValueError("API_KEY environment variable is not set")
+
+    #Monkey patch to use api key
+    pubmed.parameters.update({'api_key': api_key})
     pubmed._rateLimit = 10
-    """
 
     # PUT YOUR SEARCH TERM HERE ##
     search_terms = [keyword for keyword in keywords]
@@ -28,7 +39,7 @@ def fetch_from_keywords(keywords: list[str]):
     articleInfo = []
 
     for search_term in search_terms:
-        results = pubmed.query(search_term, max_results=1)
+        results = pubmed.query(search_term, max_results=10)
 
         for article in results:
             # Print the type of object we've found (can be either PubMedBookArticle or PubMedArticle).

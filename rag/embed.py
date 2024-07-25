@@ -143,6 +143,7 @@ def main():
     abstracts_path = config.get("abstracts_path")
     abstracts_chunks = load_abstracts_chunks(abstracts_path)
     abstracts_collection = update_collection("abstracts", abstracts_chunks)
+    # Exécuter la fonction read pour afficher le contenu du fichier pickle
 
     print(tables_collection.peek())
     print(abstracts_collection.peek())
