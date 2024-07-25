@@ -28,7 +28,7 @@ def fetch_from_keywords(keywords: list[str]):
     articleInfo = []
 
     for search_term in search_terms:
-        results = pubmed.query(search_term, max_results=10)
+        results = pubmed.query(search_term, max_results=1)
 
         for article in results:
             # Print the type of object we've found (can be either PubMedBookArticle or PubMedArticle).
