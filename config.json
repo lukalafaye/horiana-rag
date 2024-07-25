@@ -3,5 +3,12 @@
     "docx_path": "confidential/capsular/capsular-stat-report.docx",
     "output_path": "capsular.pkl",
     "tables_path": "tables.pkl",
-    "abstracts_path": "abstracts.csv"
+    "abstracts_path": "abstracts.csv",
+
+
+    "test_pdf_path": "redacted/redacted/redacted-stat-report.pdf",
+    "test_docx_path": "redacted/redacted/redacted-stat-report.docx",
+    "test_output_path": "redacted.pkl",
+    "test_tables_path": "tables.pkl",
+    "test_abstracts_path": "abstracts.csv"
 }

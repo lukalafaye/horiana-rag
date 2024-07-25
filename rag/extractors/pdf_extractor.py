@@ -53,7 +53,7 @@ def extract_information(pages_text):
 
 
 def extract_title(pages_text):
-    titlep = r"(REPORT|STATISTIQUE)[ ]*\s+(?P<title>.*?)\n[ ]*\n"
+    titlep = r"(REPORT|STATISTIQUE)[ ]*\s+(?P<title>.*?)\n[ ]*(\n|AP)"
     # On suppose que la fin du titre = \n\n...!!!
     titlem = re.search(titlep, pages_text[0], re.DOTALL)
     title = titlem.group("title").strip()

@@ -10,7 +10,7 @@ from rag.extractors.abstracts_extractor import fetch_from_keywords
 
 @pytest.fixture(scope='module')
 def pdf_metadata_and_text():
-    root_dir = os.path.join(os.path.dirname(__file__), '../confidential')
+    root_dir = os.path.join(os.path.dirname(__file__), '../redacted')
     studies_path = {}
 
     for dirpath, dirnames, filenames in os.walk(root_dir):
@@ -34,7 +34,7 @@ def pdf_metadata_and_text():
 
 @pytest.fixture(scope='module')
 def docx_tables():
-    root_dir = os.path.join(os.path.dirname(__file__), '../confidential')
+    root_dir = os.path.join(os.path.dirname(__file__), '../redacted')
     studies_path = {}
 
     for dirpath, dirnames, filenames in os.walk(root_dir):
@@ -78,7 +78,7 @@ def test_extract_metadata_pages(pdf_metadata_and_text):
         assert len(pages_content) >= 4
 
 def test_extract_information(pdf_metadata_and_text):
-    for study, content in pdf_metadata_and_text.items():
+    for _, content in pdf_metadata_and_text.items():
         pages_content = content[1]
         information = extract_information(pages_content)
 
@@ -88,7 +88,7 @@ def test_extract_information(pdf_metadata_and_text):
 
 
 def test_extract_title(pdf_metadata_and_text):
-    for study, content in pdf_metadata_and_text.items():
+    for _, content in pdf_metadata_and_text.items():
         pages_content = content[1]
         title = extract_title(pages_content)
 
@@ -97,7 +97,7 @@ def test_extract_title(pdf_metadata_and_text):
         assert len(title) <= 500
 
 def test_extract_methods(pdf_metadata_and_text):
-    for study, content in pdf_metadata_and_text.items():
+    for _, content in pdf_metadata_and_text.items():
         pages_content = content[1]
         methods = extract_methods(pages_content)
 

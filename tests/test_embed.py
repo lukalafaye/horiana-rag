@@ -16,11 +16,11 @@ def setup_data():
     with open(config_path, 'r') as f:
         config = json.load(f)
     
-    pdf_path = config["pdf_path"]
-    docx_path = config["docx_path"]
-    output_path = config["output_path"]
-    tables_path = config["tables_path"]
-    abstracts_path = config["abstracts_path"]
+    pdf_path = config["test_pdf_path"]
+    docx_path = config["test_docx_path"]
+    output_path = config["test_output_path"]
+    tables_path = config["test_tables_path"]
+    abstracts_path = config["test_abstracts_path"]
 
     keywords = ["knee", "bucket"]
     

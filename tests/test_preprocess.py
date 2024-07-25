@@ -9,10 +9,10 @@ from rag.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
 
 @pytest.fixture(scope='module')
 def pdf_paths():
-    root_dir = os.path.join(os.path.dirname(__file__), '../confidential')
+    root_dir = os.path.join(os.path.dirname(__file__), '../redacted')
     studies_pdf_paths = {}
 
-    for dirpath, dirnames, filenames in os.walk(root_dir):
+    for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
             # Check if the file has the '-stat-report.pdf' suffix
             if filename.endswith('-stat-report.pdf'):
@@ -28,7 +28,7 @@ def pdf_paths():
 
 @pytest.fixture(scope='module')
 def docx_paths():
-    root_dir = os.path.join(os.path.dirname(__file__), '../confidential')
+    root_dir = os.path.join(os.path.dirname(__file__), '../redacted')
     studies_docx_path = {}
 
     for dirpath, dirnames, filenames in os.walk(root_dir):
