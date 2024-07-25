@@ -100,11 +100,10 @@ def get_table_title(data):
     Returns table title (table raw text is in data)
     """
     # Adjusted regex to stop at [-–] followed by Population or Analysis, or match the whole line otherwise
-    tabletitlep = re.compile(
-        r"""Table\s*\d+(?:\.\d+)*\.\s*(?P<title>.*?)(?=\s*[-–]\s*
-        (Population|Analysis|Chronic|Included|Analyzed))|
-        Table\s*\d+(?:\.\d+)*\.\s*(?P<title_full>.*)""",
-        re.VERBOSE,
+    tabletitlep = (
+        r"Table\s*\d+(?:\.\d+)*\.\s*(?P<title>.*?)(?=\s*[-–]\s*"
+        r"(Population|Analysis|Chronic|Included|Analyzed))|"
+        r"Table\s*\d+(?:\.\d+)*\.\s*(?P<title_full>.*)"
     )
     tabletitlem = re.search(tabletitlep, data, re.DOTALL)
     title = tabletitlem.group(0).strip()
