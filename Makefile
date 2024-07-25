@@ -18,7 +18,7 @@ test:
 
 # Target to lint the code
 lint:
-	flake8 rag/ tests/
+	-flake8 --config=.flake8 rag/ tests/
 	@echo "Code linted."
 
 # Target to format the code

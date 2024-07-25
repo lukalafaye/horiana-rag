@@ -20,5 +20,5 @@ __all__ = [
     "extract_information",
     "extract_tables_from_doc",
     "fetch_relevant_tables",
-    "fetch_from_keywords"
+    "fetch_from_keywords",
 ]
