@@ -10,7 +10,7 @@ from rag.extractors.pdf_extractor import (
 from rag.extractors.docx_extractor import extract_tables_from_doc, fetch_relevant_tables
 
 
-def process_files(pdf_path, doc_path):
+def process_files(pdf_path, docx_path):
     # Extract information from the PDF
     metadata, pages_text = extract_metadata_pages(pdf_path)
     information = extract_information(pages_text)
@@ -20,7 +20,7 @@ def process_files(pdf_path, doc_path):
     tables = extract_tables(pages_text)
 
     # Extract information from the DOCX
-    doc_tables = extract_tables_from_doc(doc_path)
+    doc_tables = extract_tables_from_doc(docx_path)
     relevant_doc_tables = fetch_relevant_tables(doc_tables)
 
     # Create the document dictionary

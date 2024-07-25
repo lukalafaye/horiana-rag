@@ -5,6 +5,11 @@ import json
 docker = False 
 
 def fetch_from_keywords(keywords: list[str]):
+    keywords = [keyword for keyword in keywords if keyword.strip()]
+    if keywords == None or len(keywords) == 0:
+        print("Keywords cannot be empty")
+        return None 
+
     pubmed = PubMed(tool="PubMedSearcher", email="myemail@ccc.com")
     #Monkey patch to use api key
     #my_api_key = 'thisismyapikey'
@@ -51,6 +56,12 @@ def fetch_from_keywords(keywords: list[str]):
     articlesPD = pd.DataFrame.from_dict(articleInfo)
     articlesPD.drop_duplicates(subset=['doi'], inplace=True)
 
+    return articlesPD
+
+def main():
+    keywords = ["knee", "bucket"]
+    articlesPD = fetch_from_keywords(keywords)
+
     # Saving instructions
     config_path = 'config.json'
     if docker:
@@ -61,13 +72,8 @@ def fetch_from_keywords(keywords: list[str]):
         config = json.load(f)
 
     abstracts_path = config.get('abstracts_path')
+
     articlesPD.to_csv(abstracts_path, index = None, header=True)
-
-    return articlesPD
-
-def main():
-    keywords = ["knee", "bucket"]
-    articlesPD = fetch_from_keywords(keywords)
 
 if __name__ == "__main__":
     main()

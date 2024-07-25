@@ -2,11 +2,11 @@
 
 import pytest
 import os
-from pprint import pprint
+import pandas as pd
 
 from rag.extractors.pdf_extractor import extract_metadata_pages, extract_information, extract_title, extract_methods, extract_keyresults, extract_tables
 from rag.extractors.docx_extractor import extract_tables_from_doc, fetch_relevant_tables
-
+from rag.extractors.abstracts_extractor import fetch_from_keywords
 
 @pytest.fixture(scope='module')
 def pdf_metadata_and_text():
@@ -61,7 +61,6 @@ def extracted_tables(pdf_metadata_and_text):
     tables = {}
     for study, content in pdf_metadata_and_text.items():
         pages_content = content[1]
-        print("\n\nStudy: ", study, "\n\n")
         tables[study] = extract_tables(pages_content)
     return tables
 
@@ -131,3 +130,15 @@ def test_fetch_relevant_tables(docx_tables, extracted_tables):
         assert relevant_doc_tables
 
         assert len(relevant_doc_tables) == len(extracted_tables[study].keys())
+
+def test_fetch_from_keywords():
+    assert fetch_from_keywords([]) is None 
+    assert fetch_from_keywords([""]) is None 
+    assert fetch_from_keywords(["", ""]) is None 
+
+    keywords_samples = [["medical", ""], ["medical", "disease"]]
+
+    for sample in keywords_samples:
+        abstractsdf = fetch_from_keywords(sample)
+        assert isinstance(abstractsdf, pd.DataFrame)
+        assert not abstractsdf.empty
