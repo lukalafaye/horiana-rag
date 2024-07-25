@@ -1,4 +1,4 @@
-![https://github.com/lukalafaye/horiana-rag/actions/workflows/WORKFLOW-FILE/badge.svg](https://github.com/lukalafaye/horiana-rag/actions/workflows/WORKFLOW-FILE/badge.svg)
+![workflow](https://github.com/lukalafaye/horiana-rag/actions/workflows/main.yml/badge.svg)
 
 # Horiana RAG
 
