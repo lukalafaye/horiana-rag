@@ -1,33 +1,91 @@
-"""
-# tests/test_embed.py
 import pytest
-from rag.embed import embed
+import pickle
+import json 
+import pandas as pd 
 
-def test_embed():
-    # Example input
-    example_document = {
-        'title': 'Sample Document',
-        'information': 'Sample information text.',
-        'methods': 'Sample methods text.',
-        'keyresults': 'Sample key results text.',
-        'tables': {'table1': 'Sample table data'},
+from rag.embed import load_tables_chunks, load_abstracts_chunks
+# GPU only
+# from rag.embed import StellaEmbeddingFunction connect_to_chromadb, update_collection, update_abstracts_collection
+
+from rag.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
+
+@pytest.fixture(scope='module')
+def setup_data():
+    config_path = 'config.json'
+    
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+    pdf_path = config["pdf_path"]
+    docx_path = config["docx_path"]
+    output_path = config["output_path"]
+    tables_path = config["tables_path"]
+    abstracts_path = config["abstracts_path"]
+
+    keywords = ["knee", "bucket"]
+    
+    preprocess(pdf_path, docx_path, output_path) # create document.pkl (dict)
+    extract_tables_chunks(output_path, tables_path) # create tables.pkl  [(table text, table id), ...]
+    fetch_abstracts(keywords, abstracts_path) # create csv for abstracts (dataframe)
+    
+    return {
+        "output_path": output_path,
+        "tables_path": tables_path,
+        "abstracts_path": abstracts_path
     }
 
-    # Mock function to avoid actual embedding and database operations
-    def mock_embed(document):
-        return {'embedded_data': 'mocked_embeddings'}
+def test_load_tables_chunks(setup_data):
+    text_chunks = load_tables_chunks(setup_data["tables_path"])
     
-    # Replace the real embed function with the mock
-    original_embed = embed
-    embed = mock_embed
+    assert isinstance(text_chunks, list)
+    assert len(text_chunks) > 0
+    assert isinstance(text_chunks[0], tuple)
+    assert len(text_chunks[0]) == 2 # (table text, id)
 
-    result = embed(example_document)
+def test_load_abstracts_chunks(setup_data):
+    abstracts_df = load_abstracts_chunks(setup_data["abstracts_path"])
+    
+    assert isinstance(abstracts_df, pd.DataFrame)
+    assert not abstracts_df.empty
+    # pubmed_id,title,keywords,journal,abstract,conclusions,methods,results,copyrights,doi,publication_date,authors
+    assert 'doi' in abstracts_df.columns
+    assert 'abstract' in abstracts_df.columns
 
-    assert isinstance(result, dict)
-    assert 'embedded_data' in result
-    assert result['embedded_data'] == 'mocked_embeddings'
+"""
+GPU tests
 
-    # Restore the original embed function
-    embed = original_embed
+def test_stella_embedding_function(setup_data):
+    stella_embedding_func = StellaEmbeddingFunction()
+    
+    with open(setup_data["tables_path"], "rb") as f:
+        text_chunks = pickle.load(f)
+    
+    texts = [chunk[0] for chunk in text_chunks]
+    embeddings = stella_embedding_func(texts)
+    
+    assert isinstance(embeddings, list)
+    assert len(embeddings) == len(text_chunks)
+    assert isinstance(embeddings[0], list)
 
+def test_connect_to_chromadb():
+    client = connect_to_chromadb()
+    
+    # Add additional checks if needed, e.g., verifying client connection
+    assert client is not None
+
+def test_update_collection(setup_data):
+    with open(setup_data["tables_path"], "rb") as f:
+        tables_chunks = pickle.load(f)
+    
+    collection = update_collection("tables", tables_chunks)
+    
+    # Add checks for the collection if needed
+    assert collection is not None
+
+def test_update_abstracts_collection(setup_data):
+    abstracts_df = load_abstracts_chunks(setup_data["abstracts_path"])
+    collection = update_abstracts_collection(abstracts_df)
+    
+    # Add checks for the collection if needed
+    assert collection is not None
 """

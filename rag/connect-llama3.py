@@ -1,6 +1,7 @@
 import openai
 from dotenv import load_dotenv
 import os
+from rag.utils import validate_params
 
 docker = False 
 
@@ -20,11 +21,12 @@ def connect_to_llama3_server():
 
     return client 
 
+@validate_params
 def request_completion(client, content):
     completion = client.chat.completions.create(
         model="Meta-Llama-3-70B-Instruct",
         messages=[
-            {"role": "user", "content": completion}
+            {"role": "user", "content": content}
         ]
     )
 

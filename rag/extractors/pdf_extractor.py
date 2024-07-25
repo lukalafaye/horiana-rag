@@ -103,8 +103,6 @@ def get_table_title(data):
     tabletitlep = r"Table\s*\d+(?:\.\d+)*\.\s*(?P<title>.*?)(?=\s*[-–]\s*(Population|Analysis|Chronic|Included|Analyzed))|Table\s*\d+(?:\.\d+)*\.\s*(?P<title_full>.*)"
     tabletitlem = re.search(tabletitlep, data, re.DOTALL)
     title = tabletitlem.group(0).strip()
-    print("data;", data)
-    print("title,", title)
 
     return title
 
@@ -274,7 +272,6 @@ def extract_tables(pages_text):
         table_list = list_page_tables(pages_text[i])
         for t in table_list:
             title, description = get_table_title_description(t)
-            print(title)
             tables_dict = addRelevantPdfTable(tables_dict, title, description)
 
     return tables_dict

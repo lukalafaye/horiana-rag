@@ -13,7 +13,7 @@ install:
 
 # Target to run tests
 test:
-	pytest -s $(TESTS_DIR)
+	pytest $(TESTS_DIR) # add -s for verbose
 	@echo "Tests run."
 
 # Target to lint the code

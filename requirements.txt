@@ -13,6 +13,7 @@ idna
 zipp
 xformers
 sympy
+pyparsing
 
 # Development and testing dependencies
 pytest

@@ -8,9 +8,18 @@ from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from sentence_transformers import SentenceTransformer
 import pandas as pd 
 
-docker = True
-stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True).cuda()
+from rag.utils import validate_params
+import torch 
 
+docker = True
+
+if torch.cuda.is_available():
+    stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True).cuda()
+else:
+    stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True)
+
+
+@validate_params
 def load_tables_chunks(pickle_file):
     # Refer to extract_tables_chunks
     """
@@ -22,6 +31,8 @@ def load_tables_chunks(pickle_file):
 
     return text_chunks
 
+
+@validate_params
 def load_abstracts_chunks(csv_file):
     # returns dataframe
     # pubmed_id,title,keywords,journal,abstract,conclusions,methods,results,copyrights,doi,publication_date,authors
@@ -38,6 +49,8 @@ class StellaEmbeddingFunction(EmbeddingFunction):
             embeddings.append(embedding_array.tolist())
         return embeddings
 
+
+@validate_params
 def connect_to_chromadb():
     """"
     Connects to chroma db server already running...
@@ -62,6 +75,8 @@ def connect_to_chromadb():
 
     return client
 
+
+@validate_params
 def update_collection(collection_name, tables_chunks):
     """
     tables_chunks = [("table text", "id"), ...]
@@ -81,6 +96,8 @@ def update_collection(collection_name, tables_chunks):
 
     return collection
 
+
+@validate_params
 def update_abstracts_collection(abstracts_chunks):
     # Complete with abstacts chunks
 
