@@ -6,8 +6,18 @@ name: Python application
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '*.md'
+      - '.*'
+      - 'Dockerfile'
+      - 'Makefile'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '*.md'
+      - '.*'
+      - 'Dockerfile'
+      - 'Makefile'
 
 permissions:
   contents: read
