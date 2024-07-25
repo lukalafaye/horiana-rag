@@ -1,6 +1,6 @@
 import pickle
 from pathlib import Path
-import json 
+import json
 
 from rag.extractors.utils import process_files  # Updated import path
 from rag.extractors.abstracts_extractor import fetch_from_keywords
@@ -8,6 +8,7 @@ from rag.extractors.abstracts_extractor import fetch_from_keywords
 from rag.utils import validate_params
 
 docker = False
+
 
 @validate_params
 def preprocess(pdf_path, docx_path, output_path):
@@ -21,6 +22,7 @@ def preprocess(pdf_path, docx_path, output_path):
     with open(output_path, "wb") as f:
         pickle.dump(document, f)
 
+
 @validate_params
 def extract_tables_chunks(pickle_file, tables_output_path):
     """
@@ -29,35 +31,45 @@ def extract_tables_chunks(pickle_file, tables_output_path):
     with open(pickle_file, "rb") as f:
         document = pickle.load(f)
 
-    text_chunks = [(" ".join(document["tables"][key][:2]) + '\n'.join(document["tables"][key][2].iloc[:, 0].astype(str).tolist()), key) for key in document["tables"].keys()]
+    text_chunks = [
+        (
+            " ".join(document["tables"][key][:2])
+            + "\n".join(document["tables"][key][2].iloc[:, 0].astype(str).tolist()),
+            key,
+        )
+        for key in document["tables"].keys()
+    ]
 
     with open(tables_output_path, "wb") as f:
         pickle.dump(text_chunks, f)
 
+
 @validate_params
 def fetch_abstracts(keywords, abstracts_path):
     articlesPD = fetch_from_keywords(keywords)
-    articlesPD.to_csv(abstracts_path, index = None, header=True)
+    articlesPD.to_csv(abstracts_path, index=None, header=True)
     return articlesPD
 
 
 def main():
     # Chemin vers le fichier de configuration JSON
-    config_path = 'config.json'
+    config_path = "config.json"
     if docker:
-        config_path = '/app/' + config_path
+        config_path = "/app/" + config_path
     # Lire le fichier de configuration JSON
-    with open(config_path, 'r') as f:
+    with open(config_path, "r") as f:
         config = json.load(f)
 
-    pdf_path = config.get('pdf_path')
-    docx_path = config.get('docx_path')
-    output_path = config.get('output_path')
+    pdf_path = config.get("pdf_path")
+    docx_path = config.get("docx_path")
+    output_path = config.get("output_path")
     tables_path = config.get("tables_path")
-    abstracts_path = config.get('abstracts_path')
+    abstracts_path = config.get("abstracts_path")
 
     if not pdf_path or not docx_path or not output_path:
-        raise ValueError("Le fichier de configuration JSON doit contenir les clés 'pdf_path', 'docx_path', et 'output_path'.")
+        raise ValueError(
+            "Le fichier de configuration JSON doit contenir les clés 'pdf_path', 'docx_path', et 'output_path'."
+        )
 
     # Assurez-vous que les chemins sont valides
     pdf_path = Path(pdf_path)
@@ -73,6 +85,7 @@ def main():
     keywords = ["knee", "bucket"]
     abstractsdf = fetch_abstracts(keywords, abstracts_path)
     print(abstractsdf.columns)
-    
+
+
 if __name__ == "__main__":
     main()
