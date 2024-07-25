@@ -11,7 +11,7 @@ import pandas as pd
 from rag.utils import validate_params
 import torch 
 
-docker = True
+docker = False
 
 if torch.cuda.is_available():
     stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True).cuda()
