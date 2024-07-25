@@ -1,3 +1,5 @@
+https://github.com/lukalafaye/horiana-rag/actions/workflows/WORKFLOW-FILE/badge.svg
+
 # Horiana RAG
 
 A Python project for Retrieval-Augmented Generation (RAG) for document processing and embedding.
