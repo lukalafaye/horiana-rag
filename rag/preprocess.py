@@ -11,15 +11,15 @@ docker = False
 
 
 @validate_params
-def preprocess(pdf_path, docx_path, output_path):
+def preprocess(pdf_path, docx_path, synopsis_path, document_output_path):
     """
     Extracts document info using pdf and docx in a dictionnary
     Saves dictionnary to pickle file
     """
 
-    document = process_files(pdf_path, docx_path)
+    document = process_files(pdf_path, docx_path, synopsis_path)
 
-    with open(output_path, "wb") as f:
+    with open(document_output_path, "wb") as f:
         pickle.dump(document, f)
 
 
@@ -45,9 +45,9 @@ def extract_tables_chunks(pickle_file, tables_output_path):
 
 
 @validate_params
-def fetch_abstracts(keywords, abstracts_path):
+def fetch_abstracts(keywords, abstracts_output_path):
     articlesPD = fetch_from_keywords(keywords)
-    articlesPD.to_csv(abstracts_path, index=None, header=True)
+    articlesPD.to_csv(abstracts_output_path, index=None, header=True)
     return articlesPD
 
 
@@ -62,11 +62,13 @@ def main():
 
     pdf_path = config.get("pdf_path")
     docx_path = config.get("docx_path")
-    output_path = config.get("output_path")
-    tables_path = config.get("tables_path")
-    abstracts_path = config.get("abstracts_path")
+    synopsis_path = config.get("synopsis_path")
 
-    if not pdf_path or not docx_path or not output_path:
+    document_output_path = config.get("document_output_path")
+    tables_output_path = config.get("tables_output_path")
+    abstracts_output_path = config.get("abstracts_output_path")
+
+    if not pdf_path or not docx_path or not document_output_path:
         raise ValueError(
             "Le fichier de configuration JSON doit contenir les clés 'pdf_path', 'docx_path', et 'output_path'."
         )
@@ -74,17 +76,29 @@ def main():
     # Assurez-vous que les chemins sont valides
     pdf_path = Path(pdf_path)
     docx_path = Path(docx_path)
-    output_path = Path(output_path)
+    synopsis_path = Path(synopsis_path)
 
+    document_output_path = Path(document_output_path)
+    tables_output_path = Path(tables_output_path)
+    abstracts_output_path = Path(abstracts_output_path)
+
+    # 1. Save document to pickle file
     # Exécuter la fonction preprocess
-    preprocess(pdf_path, docx_path, output_path)
+    preprocess(pdf_path, docx_path, synopsis_path, document_output_path)
 
+    # 2. Extract table chunks from document pickle and save them to tables pickle file
+    # -> tables_output_path
     # Exécuter la fonction read pour afficher le contenu du fichier pickle
-    extract_tables_chunks(output_path, tables_path)
+    extract_tables_chunks(document_output_path, tables_output_path)
+    # document_output_path is a pickle file
+    # tables_output_path is a pickle file
 
     keywords = ["knee", "bucket"]
-    abstractsdf = fetch_abstracts(keywords, abstracts_path)
-    print(abstractsdf.columns)
+    # 3. Fetch abstracts and save to csv
+    fetch_abstracts(keywords, abstracts_output_path)
+    # saves abstracts to csv abstracts_output_path
+
+    # 4. Extract synopsis and save to pickle file
 
 
 if __name__ == "__main__":

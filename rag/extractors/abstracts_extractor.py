@@ -1,10 +1,11 @@
 import pandas as pd
 from pymed import PubMed
 from dotenv import load_dotenv
-import os 
-import json 
+import os
+import json
 
 docker = False
+
 
 def fetch_from_keywords(keywords: list[str]):
     keywords = [keyword for keyword in keywords if keyword.strip()]
@@ -13,21 +14,23 @@ def fetch_from_keywords(keywords: list[str]):
         return None
 
     pubmed = PubMed(tool="PubMedSearcher", email="myemail@ccc.com")
-    
+
     pubmed_env = ".pubmed_env"
     if docker:
         pubmed_env = "/app/" + pubmed_env
 
     if os.path.exists(pubmed_env):
         load_dotenv(pubmed_env)
+    else:
+        print(pubmed_env + " not found.")
 
     api_key = os.getenv("API_KEY")
 
     if api_key is None:
         raise ValueError("API_KEY environment variable is not set")
 
-    #Monkey patch to use api key
-    pubmed.parameters.update({'api_key': api_key})
+    # Monkey patch to use api key
+    pubmed.parameters.update({"api_key": api_key})
     pubmed._rateLimit = 10
 
     # PUT YOUR SEARCH TERM HERE ##

@@ -24,10 +24,13 @@ def setup_data():
     output_path = config["test_output_path"]
     tables_path = config["test_tables_path"]
     abstracts_path = config["test_abstracts_path"]
+    synopsis_path = config["test_synopsis_path"]
 
     keywords = ["knee", "bucket"]
 
-    preprocess(pdf_path, docx_path, output_path)  # create document.pkl (dict)
+    preprocess(
+        pdf_path, docx_path, synopsis_path, output_path
+    )  # create document.pkl (dict)
     extract_tables_chunks(
         output_path, tables_path
     )  # create tables.pkl  [(table text, table id), ...]
