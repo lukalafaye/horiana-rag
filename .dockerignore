@@ -39,3 +39,6 @@ Thumbs.db
 .gitignore
 .git
 .github
+
+# Ignore venv/
+venv/

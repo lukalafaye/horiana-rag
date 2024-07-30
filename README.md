@@ -105,3 +105,5 @@ Main scripts:
 * synopsis
 * update kaggle for pdf preprocessing (docx already up2date)
 * update kaggle for pdf+docx preprocessing
+
+export PYTHONPATH=$PYTHONPATH:/home/ubuntu/efs-mount-point/horiana-rag
