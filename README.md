@@ -81,7 +81,7 @@ Run chroma server with docker
 Instructions from [https://cookbook.chromadb.dev/security/auth/#token-authentication](https://cookbook.chromadb.dev/security/auth/#token-authentication).
 
 ```
-docker run --rm -e CHROMA_SERVER_AUTHN_CREDENTIALS="chr0ma-t0k3n" -e CHROMA_SERVER_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider" -e CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization" -p 8000:8000  chromadb/chroma:latest
+docker run -d --rm -e CHROMA_SERVER_AUTHN_CREDENTIALS="chr0ma-t0k3n" -e CHROMA_SERVER_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider" -e CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization" -p 8000:8000  chromadb/chroma:latest
 ```
 
 Note: `chr0ma-t0k3n` is used in .chroma_env!
