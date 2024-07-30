@@ -102,6 +102,4 @@ Main scripts:
 
 ## Todo 
 
-* synopsis
-* update kaggle for pdf preprocessing (docx already up2date)
-* update kaggle for pdf+docx preprocessing
+* in embed py make sure model is downloaded and one time and load it from local folder...
