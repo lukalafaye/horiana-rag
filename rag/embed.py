@@ -7,6 +7,7 @@ import chromadb
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from sentence_transformers import SentenceTransformer
 import pandas as pd
+from pprint import pprint
 
 from rag.utils import validate_params
 import torch
@@ -133,15 +134,17 @@ def main():
     with open(config_path, "r") as f:
         config = json.load(f)
 
-    tables_path = config.get("tables_path")
+    tables_path = config.get("tables_output_path")
     tables_chunks = load_tables_chunks(tables_path)
 
     tables_collection = update_collection(
         "tables", tables_chunks
     )  # adds some text chunks to chromadb
 
-    abstracts_path = config.get("abstracts_path")
+    abstracts_path = config.get("abstracts_output_path")
     abstracts_chunks = load_abstracts_chunks(abstracts_path)
+
+    pprint(abstracts_chunks)
     abstracts_collection = update_collection("abstracts", abstracts_chunks)
     # Exécuter la fonction read pour afficher le contenu du fichier pickle
 
