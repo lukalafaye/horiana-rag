@@ -53,14 +53,11 @@ def test_load_tables_chunks(setup_data):
 
 
 def test_load_abstracts_chunks(setup_data):
-    abstracts_df = load_abstracts_chunks(setup_data["abstracts_path"])
-
-    assert isinstance(abstracts_df, pd.DataFrame)
-    assert not abstracts_df.empty
-    # pubmed_id,title,keywords,journal,abstract,conclusions,methods,results,copyrights,doi,publication_date,authors
-    assert "doi" in abstracts_df.columns
-    assert "abstract" in abstracts_df.columns
-
+    abstracts_chunks = load_abstracts_chunks(setup_data["abstracts_path"])
+    assert isinstance(abstracts_chunks, list)
+    assert len(abstracts_chunks) > 0
+    assert isinstance(abstracts_chunks[0], tuple)
+    assert len(abstracts_chunks[0]) == 2  # (table text, id)
 
 """
 GPU tests
