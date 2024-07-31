@@ -102,5 +102,3 @@ Main scripts:
 ## Todo 
 
 * in embed py make sure model is downloaded and one time and load it from local folder...
-
-POH POH POH
