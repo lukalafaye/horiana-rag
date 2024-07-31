@@ -14,6 +14,7 @@ zipp
 xformers
 sympy
 pyparsing
+openai
 
 # Development and testing dependencies
 pytest
