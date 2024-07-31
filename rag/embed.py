@@ -44,9 +44,15 @@ def load_abstracts_chunks(csv_file):
     text_chunks = [(text, id), ...]
     """
     df = pd.read_csv(csv_file)
-    abstracts_chunks = [(row['abstract'], row['pubmed_id']) for _, row in df.iterrows()]
     
-    return abstracts_chunks
+    if 'pubmed_id' not in df.columns or 'abstract' not in df.columns:
+        raise ValueError("CSV file must contain 'pubmed_id' and 'abstract' columns")
+    
+    # Convert the pubmed_id to string and create the list of tuples
+    text_chunks = [(row['abstract'], str(row['pubmed_id'])) for _, row in df.iterrows()]
+    
+    return text_chunks
+
 
 class StellaEmbeddingFunction(EmbeddingFunction):
     def __init__(self):
