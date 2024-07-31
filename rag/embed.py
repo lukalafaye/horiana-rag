@@ -39,8 +39,14 @@ def load_tables_chunks(pickle_file):
 def load_abstracts_chunks(csv_file):
     # returns dataframe
     # pubmed_id,title,keywords,journal,abstract,conclusions,methods,results,copyrights,doi,publication_date,authors
-    return pd.read_csv(csv_file)
-
+    """
+    Loads abstracts text chunks stored in pickle file.
+    text_chunks = [(text, id), ...]
+    """
+    df = pd.read_csv(csv_file)
+    abstracts_chunks = [(row['abstract'], row['pubmed_id']) for _, row in df.iterrows()]
+    
+    return abstracts_chunks
 
 class StellaEmbeddingFunction(EmbeddingFunction):
     def __init__(self):

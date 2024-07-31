@@ -96,9 +96,7 @@ def main():
     keywords = ["knee", "bucket"]
     # 3. Fetch abstracts and save to csv
     fetch_abstracts(keywords, abstracts_output_path)
-    # saves abstracts to csv abstracts_output_path
-
-    # 4. Extract synopsis and save to pickle file
+    # saves abstracts to csv abstracts_output_path    
 
 
 if __name__ == "__main__":

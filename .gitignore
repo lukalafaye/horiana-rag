@@ -31,8 +31,7 @@ Thumbs.db
 *.pkl
 *.csv
 
-# Ignore .llama3_env and .pubmed_env
-.llama3_env
+# Ignore and .pubmed_env
 .pubmed_env
 
 # Ignore venv/
