@@ -36,3 +36,5 @@ Thumbs.db
 
 # Ignore venv/
 venv
+
+chroma/

@@ -1,11 +1,15 @@
 from langchain_chroma import Chroma
-from rag.embed import connect_to_chromadb, StellaEmbeddingFunction
+from rag.embed import connect_to_chromadb, StellaEmbeddingFunction, TestingEmbeddingFunction
 
+cpu = True 
 
 def main():
     persistent_client = connect_to_chromadb()
 
-    embedding_function = StellaEmbeddingFunction()
+    if cpu:
+        embedding_function = TestingEmbeddingFunction()
+    else:
+        embedding_function = StellaEmbeddingFunction()
 
     langchain_chroma = Chroma(
         client=persistent_client,

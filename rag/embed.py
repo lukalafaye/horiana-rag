@@ -13,14 +13,20 @@ from rag.utils import validate_params
 import torch
 
 docker = False
+cpu = True 
 
-if torch.cuda.is_available():
-    stella = SentenceTransformer(
-        "infgrad/stella_en_400M_v5", trust_remote_code=True
-    ).cuda()
+if cpu:
+    if torch.cuda.is_available():
+        gtemicro = SentenceTransformer('Mihaiii/gte-micro-v3').cuda()
+    else:
+        gtemicro = SentenceTransformer('Mihaiii/gte-micro-v3')
 else:
-    stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True)
-
+    if torch.cuda.is_available():
+        stella = SentenceTransformer(
+            "infgrad/stella_en_400M_v5", trust_remote_code=True
+        ).cuda()
+    else:
+        stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True)
 
 @validate_params
 def load_tables_chunks(pickle_file):
@@ -49,6 +55,9 @@ def load_abstracts_chunks(csv_file):
         raise ValueError("CSV file must contain 'pubmed_id' and 'abstract' columns")
     
     # Convert the pubmed_id to string and create the list of tuples
+    df = df.dropna(subset=['abstract'])
+    df = df[df['abstract'].str.strip() != '']
+    
     text_chunks = [(row['abstract'], str(row['pubmed_id'])) for _, row in df.iterrows()]
     
     return text_chunks
@@ -67,6 +76,22 @@ class StellaEmbeddingFunction(EmbeddingFunction):
     
     def embed_query(self, query: str) -> Embeddings:
         return [self.stella.encode((query)).toList()]
+
+class TestingEmbeddingFunction(EmbeddingFunction):
+    def __init__(self):
+        self.gtemicro = gtemicro
+
+    def __call__(self, texts: Documents) -> Embeddings:
+        embeddings = []
+        for text in texts:
+            if not isinstance(text, str):
+                print("TEXT: ", type(text), text)
+            embedding_array = self.gtemicro.encode((text))
+            embeddings.append(embedding_array.tolist())
+        return embeddings
+    
+    def embed_query(self, query: str) -> Embeddings:
+        return [self.gtemicro.encode((query)).toList()]
 
 @validate_params
 def connect_to_chromadb():
@@ -103,9 +128,14 @@ def update_collection(collection_name, tables_chunks):
     client = connect_to_chromadb()
     print("Client heartbeat: ", client.heartbeat())
 
-    collection = client.get_or_create_collection(
-        name=collection_name, embedding_function=StellaEmbeddingFunction()
-    )
+    if cpu:
+        collection = client.get_or_create_collection(
+            name=collection_name, embedding_function=TestingEmbeddingFunction()
+        )
+    else:
+        collection = client.get_or_create_collection(
+            name=collection_name, embedding_function=StellaEmbeddingFunction()
+        )
 
     ids = [table[1] for table in tables_chunks]
     docs = [table[0] for table in tables_chunks]
@@ -125,9 +155,15 @@ def update_abstracts_collection(abstracts_chunks):
     print("Client heartbeat: ", client.heartbeat())
 
     collection_name = "abstracts"
-    collection = client.get_or_create_collection(
-        name=collection_name, embedding_function=StellaEmbeddingFunction()
-    )
+
+    if cpu: 
+        collection = client.get_or_create_collection(
+            name=collection_name, embedding_function=TestingEmbeddingFunction()
+        )
+    else:
+       collection = client.get_or_create_collection(
+            name=collection_name, embedding_function=StellaEmbeddingFunction()
+        )
 
     ids = abstracts_chunks["doi"].tolist()
     docs = abstracts_chunks["abstract"].tolist()
