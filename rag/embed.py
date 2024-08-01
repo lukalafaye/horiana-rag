@@ -81,7 +81,7 @@ def connect_to_chromadb():
     chroma_client_auth_provider = os.getenv("CHROMA_CLIENT_AUTHN_PROVIDER")
 
     print(chroma_client_auth_provider, chroma_client_auth_credentials)
-
+    # https://cookbook.chromadb.dev/core/collections/#collection-utilities
     client = chromadb.HttpClient(
         settings=Settings(
             chroma_client_auth_provider=chroma_client_auth_provider,
