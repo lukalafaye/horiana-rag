@@ -61,10 +61,12 @@ class StellaEmbeddingFunction(EmbeddingFunction):
     def __call__(self, texts: Documents) -> Embeddings:
         embeddings = []
         for text in texts:
-            embedding_array = self.stella.encode((str(text)))
+            embedding_array = self.stella.encode((text))
             embeddings.append(embedding_array.tolist())
         return embeddings
-
+    
+    def embed_query(self, query: str) -> Embeddings:
+        return [self.stella.encode((query)).toList()]
 
 @validate_params
 def connect_to_chromadb():

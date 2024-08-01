@@ -76,12 +76,12 @@ def fetch_from_keywords(keywords: list[str]):
         # Generate Pandas DataFrame from list of dictionaries
     articlesPD = pd.DataFrame.from_dict(articleInfo)
     articlesPD.drop_duplicates(subset=["doi"], inplace=True)
-
+    print("Shape: ", articlesPD.shape)
     return articlesPD
 
 
 def main():
-    keywords = ["knee", "bucket"]
+    keywords = ["knee", "bucket", "asthma", "diabetes"]
     articlesPD = fetch_from_keywords(keywords)
 
     # Saving instructions

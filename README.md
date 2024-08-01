@@ -85,8 +85,7 @@ docker run -d --rm \
 -e CHROMA_SERVER_AUTHN_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider" \
 -e CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization" \
 -p 8000:8000 \
--v ./chroma:/chroma/chroma \ # persistent server... if docker container is removed and 
-# new instance created the database of collections will still be in ./chroma
+-v ./chroma:/chroma/chroma \
 chromadb/chroma:latest
 ```
 
@@ -108,4 +107,4 @@ Main scripts:
 
 ## Todo 
 
-* in embed py make sure model is downloaded and one time and load it from local folder...
+Rag
