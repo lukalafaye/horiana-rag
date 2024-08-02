@@ -1,3 +1,8 @@
+import warnings
+warnings.filterwarnings('ignore')
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import pickle
 import json
 from chromadb.config import Settings
@@ -57,7 +62,7 @@ def load_abstracts_chunks(csv_file):
     # Convert the pubmed_id to string and create the list of tuples
     df = df.dropna(subset=['abstract'])
     df = df[df['abstract'].str.strip() != '']
-    
+
     text_chunks = [(row['abstract'], str(row['pubmed_id'])) for _, row in df.iterrows()]
     
     return text_chunks
@@ -75,7 +80,7 @@ class StellaEmbeddingFunction(EmbeddingFunction):
         return embeddings
     
     def embed_query(self, query: str) -> Embeddings:
-        return [self.stella.encode((query)).toList()]
+        return self.stella.encode((query)).tolist()
 
 class TestingEmbeddingFunction(EmbeddingFunction):
     def __init__(self):
@@ -84,14 +89,12 @@ class TestingEmbeddingFunction(EmbeddingFunction):
     def __call__(self, texts: Documents) -> Embeddings:
         embeddings = []
         for text in texts:
-            if not isinstance(text, str):
-                print("TEXT: ", type(text), text)
             embedding_array = self.gtemicro.encode((text))
             embeddings.append(embedding_array.tolist())
         return embeddings
     
     def embed_query(self, query: str) -> Embeddings:
-        return [self.gtemicro.encode((query)).toList()]
+        return self.gtemicro.encode((query)).tolist()
 
 @validate_params
 def connect_to_chromadb():
@@ -128,22 +131,25 @@ def update_collection(collection_name, tables_chunks):
     client = connect_to_chromadb()
     print("Client heartbeat: ", client.heartbeat())
 
+    client.delete_collection(collection_name)
+
     if cpu:
         collection = client.get_or_create_collection(
-            name=collection_name, embedding_function=TestingEmbeddingFunction()
-        )
+            name=collection_name, embedding_function=TestingEmbeddingFunction(), metadata={"hnsw:space": "cosine"},
+        ) # l2 is the default
     else:
         collection = client.get_or_create_collection(
-            name=collection_name, embedding_function=StellaEmbeddingFunction()
-        )
+            name=collection_name, embedding_function=StellaEmbeddingFunction(), metadata={"hnsw:space": "cosine"},
+        ) # l2 is the default
 
     ids = [table[1] for table in tables_chunks]
     docs = [table[0] for table in tables_chunks]
+    metadatas = [{"meta": "POH", "meta1": "poh"} for i in range(len(tables_chunks))]
+    assert len(ids) == len(docs) and len(docs) == len(metadatas)
 
-    assert len(ids) == len(docs)
+    collection.add(documents=docs, metadatas=metadatas, ids=ids)
 
-    collection.add(documents=docs, ids=ids)
-
+    print(collection.peek()["metadatas"])
     return collection
 
 
@@ -196,11 +202,6 @@ def main():
 
     pprint(abstracts_chunks)
     abstracts_collection = update_collection("abstracts", abstracts_chunks)
-    # Exécuter la fonction read pour afficher le contenu du fichier pickle
-
-    print(tables_collection.peek())
-    print(abstracts_collection.peek())
-
 
 if __name__ == "__main__":
     main()
