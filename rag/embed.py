@@ -145,6 +145,7 @@ def update_collection(collection_name, tables_chunks):
     ids = [table[1] for table in tables_chunks]
     docs = [table[0] for table in tables_chunks]
     metadatas = [{"meta": "POH", "meta1": "poh"} for i in range(len(tables_chunks))]
+    
     assert len(ids) == len(docs) and len(docs) == len(metadatas)
 
     collection.add(documents=docs, metadatas=metadatas, ids=ids)

@@ -34,6 +34,7 @@ Thumbs.db
 # Ignore .llama3_env and .pubmed_env
 .llama3_env
 .pubmed_env
+.openai_env
 
 # Ignore .gitignore and .git and .github
 .gitignore

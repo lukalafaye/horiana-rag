@@ -40,4 +40,4 @@ venv
 chroma/
 
 # API keys
-.env
+.openai_env
