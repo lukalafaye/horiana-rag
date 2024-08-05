@@ -107,4 +107,4 @@ Main scripts:
 
 ## Todo 
 
-Rag
+Rag workflow
