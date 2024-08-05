@@ -37,6 +37,7 @@ Thumbs.db
 # Ignore venv/
 venv
 
+# Ignore Chroma
 chroma/
 
 # API keys
@@ -44,3 +45,6 @@ chroma/
 
 # Ignore notebooks
 *.ipynb
+
+# Ignore vscode config
+.vscode/

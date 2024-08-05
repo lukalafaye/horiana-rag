@@ -43,3 +43,5 @@ Thumbs.db
 
 # Ignore venv/
 venv/
+.vscode/
+
