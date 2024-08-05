@@ -190,7 +190,7 @@ def test_fetch_from_keywords():
     assert fetch_from_keywords([""]) is None
     assert fetch_from_keywords(["", ""]) is None
 
-    keywords_samples = [["medical", ""], ["medical", "disease"]]
+    keywords_samples = [["medical", "knee"], ["medical", "disease"]]
 
     for sample in keywords_samples:
         abstractsdf = fetch_from_keywords(sample)
