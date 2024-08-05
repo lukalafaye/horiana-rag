@@ -7,6 +7,10 @@ Development in progress.
 
 Project planning: [https://almanac.io/docs/planning-hBCvSPzpM3keThdXXrDv6SF7fsEs9N9p](https://almanac.io/docs/planning-hBCvSPzpM3keThdXXrDv6SF7fsEs9N9p)
 
+## Structure
+
+![draw.io](rag-workflow.drawio.png)
+
 ## Llama 3 server setup
 
 1. Request access to Llama 3 70b on hugging face → [https://huggingface.co/meta-llama/Meta-Llama-3-70B](https://huggingface.co/meta-llama/Meta-Llama-3-70B)

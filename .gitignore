@@ -41,3 +41,6 @@ chroma/
 
 # API keys
 .openai_env
+
+# Ignore notebooks
+*.ipynb
