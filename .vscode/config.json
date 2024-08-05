@@ -1,6 +1,0 @@
-{
-    "pdf_path": "confidential/capsular/capsular-stat-report.pdf",
-    "doc_path": "confidential/capsular/capsular-stat-report.docx",
-    "output_path": "capsular.pkl",
-    "tables_path": "tables.pkl"
-}
