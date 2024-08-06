@@ -1,21 +1,21 @@
 import warnings
-
-warnings.filterwarnings("ignore")
-
 from langchain_chroma import Chroma
 from rag.embed import (
     connect_to_chromadb,
     StellaEmbeddingFunction,
     TestingEmbeddingFunction,
 )
-from pprint import pprint
+
+warnings.filterwarnings("ignore")
+
 
 cpu = True
 
 
 def main():
     persistent_client = connect_to_chromadb()
-    query = "The objective of this study was to investigate the differences in muscle activation and kinematic parameters between patients with unilateral knee osteoarthritis (OA) and healthy individuals"
+    query = "The objective of this study was to investigate the differences in muscle activation and kinematic\
+        parameters between patients with unilateral knee osteoarthritis (OA) and healthy individuals"
     collection_name = "abstracts"
 
     fetch_context(query, persistent_client, collection_name)

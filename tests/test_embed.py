@@ -2,7 +2,8 @@ import pytest
 
 # import pickle
 import json
-import pandas as pd
+
+# import pandas as pd
 
 from rag.embed import load_tables_chunks, load_abstracts_chunks
 

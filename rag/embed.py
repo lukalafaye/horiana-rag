@@ -1,10 +1,4 @@
 import warnings
-
-warnings.filterwarnings("ignore")
-
-import os
-
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import pickle
 import json
 from chromadb.config import Settings
@@ -15,9 +9,11 @@ from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 from pprint import pprint
-
 from rag.utils import validate_params
 import torch
+
+warnings.filterwarnings("ignore")
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 docker = False
 cpu = True
@@ -205,15 +201,15 @@ def main():
     tables_path = config.get("tables_output_path")
     tables_chunks = load_tables_chunks(tables_path)
 
-    tables_collection = update_collection(
+    update_collection(
         "tables", tables_chunks
-    )  # adds some text chunks to chromadb
+    )  # adds some text chunks to chromadb, returns tables_collection
 
     abstracts_path = config.get("abstracts_output_path")
     abstracts_chunks = load_abstracts_chunks(abstracts_path)
 
     pprint(abstracts_chunks)
-    abstracts_collection = update_collection("abstracts", abstracts_chunks)
+    update_collection("abstracts", abstracts_chunks)  # returns abstracts_collection
 
 
 if __name__ == "__main__":
