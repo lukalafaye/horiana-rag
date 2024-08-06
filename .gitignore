@@ -16,8 +16,6 @@ models/
 # Ignore egg info
 *.egg-info/
 
-
-
 # Ignore chromadb logs and data
 *.log
 *.sqlite3
@@ -47,3 +45,5 @@ chroma/
 
 # Ignore vscode config
 .vscode/
+
+!data/test-output/
