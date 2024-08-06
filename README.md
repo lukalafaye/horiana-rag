@@ -111,4 +111,7 @@ Main scripts:
 
 ## Todo 
 
-Rag workflow
+- Change pubmed logo in rag workflow
+- Add tests
+- Lint and format code properly
+- Comment all methods / functions

@@ -1,8 +1,10 @@
 import warnings
-warnings.filterwarnings('ignore')
+
+warnings.filterwarnings("ignore")
 
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import pickle
 import json
 from chromadb.config import Settings
@@ -18,20 +20,23 @@ from rag.utils import validate_params
 import torch
 
 docker = False
-cpu = True 
+cpu = True
 
 if cpu:
     if torch.cuda.is_available():
-        gtemicro = SentenceTransformer('Mihaiii/gte-micro-v3').cuda()
+        gtemicro = SentenceTransformer("Mihaiii/gte-micro-v3").cuda()
     else:
-        gtemicro = SentenceTransformer('Mihaiii/gte-micro-v3')
+        gtemicro = SentenceTransformer("Mihaiii/gte-micro-v3")
 else:
     if torch.cuda.is_available():
         stella = SentenceTransformer(
             "infgrad/stella_en_400M_v5", trust_remote_code=True
         ).cuda()
     else:
-        stella = SentenceTransformer("infgrad/stella_en_400M_v5", trust_remote_code=True)
+        stella = SentenceTransformer(
+            "infgrad/stella_en_400M_v5", trust_remote_code=True
+        )
+
 
 @validate_params
 def load_tables_chunks(pickle_file):
@@ -55,16 +60,16 @@ def load_abstracts_chunks(csv_file):
     text_chunks = [(text, id), ...]
     """
     df = pd.read_csv(csv_file)
-    
-    if 'pubmed_id' not in df.columns or 'abstract' not in df.columns:
-        raise ValueError("CSV file must contain 'pubmed_id' and 'abstract' columns")
-    
-    # Convert the pubmed_id to string and create the list of tuples
-    df = df.dropna(subset=['abstract'])
-    df = df[df['abstract'].str.strip() != '']
 
-    text_chunks = [(row['abstract'], str(row['pubmed_id'])) for _, row in df.iterrows()]
-    
+    if "pubmed_id" not in df.columns or "abstract" not in df.columns:
+        raise ValueError("CSV file must contain 'pubmed_id' and 'abstract' columns")
+
+    # Convert the pubmed_id to string and create the list of tuples
+    df = df.dropna(subset=["abstract"])
+    df = df[df["abstract"].str.strip() != ""]
+
+    text_chunks = [(row["abstract"], str(row["pubmed_id"])) for _, row in df.iterrows()]
+
     return text_chunks
 
 
@@ -78,9 +83,10 @@ class StellaEmbeddingFunction(EmbeddingFunction):
             embedding_array = self.stella.encode((text))
             embeddings.append(embedding_array.tolist())
         return embeddings
-    
+
     def embed_query(self, query: str) -> Embeddings:
         return self.stella.encode((query)).tolist()
+
 
 class TestingEmbeddingFunction(EmbeddingFunction):
     def __init__(self):
@@ -92,9 +98,10 @@ class TestingEmbeddingFunction(EmbeddingFunction):
             embedding_array = self.gtemicro.encode((text))
             embeddings.append(embedding_array.tolist())
         return embeddings
-    
+
     def embed_query(self, query: str) -> Embeddings:
         return self.gtemicro.encode((query)).tolist()
+
 
 @validate_params
 def connect_to_chromadb():
@@ -135,17 +142,21 @@ def update_collection(collection_name, tables_chunks):
 
     if cpu:
         collection = client.get_or_create_collection(
-            name=collection_name, embedding_function=TestingEmbeddingFunction(), metadata={"hnsw:space": "cosine"},
-        ) # l2 is the default
+            name=collection_name,
+            embedding_function=TestingEmbeddingFunction(),
+            metadata={"hnsw:space": "cosine"},
+        )  # l2 is the default
     else:
         collection = client.get_or_create_collection(
-            name=collection_name, embedding_function=StellaEmbeddingFunction(), metadata={"hnsw:space": "cosine"},
-        ) # l2 is the default
+            name=collection_name,
+            embedding_function=StellaEmbeddingFunction(),
+            metadata={"hnsw:space": "cosine"},
+        )  # l2 is the default
 
     ids = [table[1] for table in tables_chunks]
     docs = [table[0] for table in tables_chunks]
     metadatas = [{"meta": "POH", "meta1": "poh"} for i in range(len(tables_chunks))]
-    
+
     assert len(ids) == len(docs) and len(docs) == len(metadatas)
 
     collection.add(documents=docs, metadatas=metadatas, ids=ids)
@@ -163,12 +174,12 @@ def update_abstracts_collection(abstracts_chunks):
 
     collection_name = "abstracts"
 
-    if cpu: 
+    if cpu:
         collection = client.get_or_create_collection(
             name=collection_name, embedding_function=TestingEmbeddingFunction()
         )
     else:
-       collection = client.get_or_create_collection(
+        collection = client.get_or_create_collection(
             name=collection_name, embedding_function=StellaEmbeddingFunction()
         )
 
@@ -203,6 +214,7 @@ def main():
 
     pprint(abstracts_chunks)
     abstracts_collection = update_collection("abstracts", abstracts_chunks)
+
 
 if __name__ == "__main__":
     main()

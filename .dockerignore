@@ -16,6 +16,9 @@ confidential/
 # Ignore Huggingface models
 models/
 
+# Ignor chroma
+chroma/
+
 # Ignore chromadb logs and data
 *.log
 *.sqlite3

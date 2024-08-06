@@ -59,6 +59,7 @@ def test_load_abstracts_chunks(setup_data):
     assert isinstance(abstracts_chunks[0], tuple)
     assert len(abstracts_chunks[0]) == 2  # (table text, id)
 
+
 """
 GPU tests
 

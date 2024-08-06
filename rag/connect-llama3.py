@@ -5,6 +5,7 @@ from rag.utils import validate_params
 
 docker = False
 
+
 def connect_to_llama3_server():
     print(os.getcwd())
     chroma_env = ".llama3_env"
@@ -21,7 +22,7 @@ def connect_to_llama3_server():
         raise ValueError("BASE_URL and API_KEY and PORT must be set")
 
     print(base_url, port)
-    base_url = base_url+":"+port+"/"
+    base_url = base_url + ":" + port + "/"
     print(base_url)
 
     client = openai.OpenAI(base_url=base_url, api_key=api_key)

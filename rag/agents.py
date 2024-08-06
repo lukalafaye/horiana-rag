@@ -3,18 +3,50 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import OpenAI
 from dotenv import load_dotenv
 import os
+import yaml
+
+
+def load_prompts(yaml_file_path):
+    with open(yaml_file_path, "r", encoding="utf-8") as file:
+        prompts = yaml.safe_load(file)
+    return prompts
+
+# Global variables
+
+yaml_prompts = "prompts/prompts.yaml"
+prompts = load_prompts(yaml_prompts)
 
 docker = False
 
-def title_retriever(llm, title, context_objectives, population, methods):
-    system = f"""
-    You are a professional medical writer. You will help the user write the title of a medical paper based off a statistical study.
-    The user will provide you with the context and objectives, population analysis, and methods of a statistical study titled {title}. 
-    Your task is to write a concise accurate title and subtitle for the medical paper about the study.
+# General functions
 
-    Title: Use the main focus of the study to create a concise and informative title that reflects the primary outcome or comparison being studied.
-    Subtitle: Provide significant details or techniques from the study's population analysis or methods in the subtitle.
-    """
+def fetch_system_prompt(key, **kwargs):
+    if key not in prompts:
+        raise KeyError(f"Prompt key '{key}' not found in possible prompts list.")
+
+    prompt_template = prompts[key]
+
+    # Replace all placeholders with corresponding values
+    try:
+        system = prompt_template.format(**kwargs)
+    except KeyError as e:
+        raise KeyError(f"Missing key in format: {e}")
+
+    return system
+
+def create_final_prompt(system, details):
+    user_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system),
+            ("user", details),
+        ]
+    )
+    return user_prompt
+
+# Specific Agents 
+
+def title_retriever(llm, title, context_objectives, population, methods):
+    system = fetch_system_prompt(key="title_prompt", title=title)
 
     details = f"""
     Context and Objectives: {context_objectives}
@@ -22,27 +54,16 @@ def title_retriever(llm, title, context_objectives, population, methods):
     Methods: {methods}
     """
 
-    title_prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", system),
-            ("user", details),
-        ]
-    )
-
+    title_prompt = create_final_prompt(system, details)
     title_chain = title_prompt | llm | StrOutputParser()
 
     return title_chain.invoke({"system": system, "details": details})
 
-def abstract_background_retriever(llm, title, context_objectives, population, methods, abstracts: list[str]):
-    system = f"""
-    You are a professional medical writer. You will help the user write the abstract background paragraph of a medical paper based off a statistical study.
-    The user will provide you with the context, objectives, population analysis, and methods of a medical study titled {title}. 
-    Additionally, they will provide you with several abstracts of related medical studies.
 
-    Your task is to write a short concise and accurate one line background paragraph for the abstract of this study. 
-    The background should incorporate the context, objectives, population analysis, methods, and insights from the related studies' abstracts. 
-    Ensure to include the context and previous research that led to this study.
-    """
+def abstract_background_retriever(
+    llm, title, context_objectives, population, methods, abstracts: list[str]
+):
+    system = fetch_system_prompt(key="abstract_background_prompt", title=title)
 
     abstracts_str = "\n\n".join(abstracts)
 
@@ -53,16 +74,11 @@ def abstract_background_retriever(llm, title, context_objectives, population, me
     Abstracts: {abstracts_str}
     """
 
-    abstract_background_prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", system),
-                ("user", details),
-            ]
-    )
-
+    abstract_background_prompt = create_final_prompt(system, details)
     abstract_background_chain = abstract_background_prompt | llm | StrOutputParser()
 
     return abstract_background_chain.invoke({"system": system, "details": details})
+
 
 def main():
     openai_env = ".openai_env"
@@ -92,12 +108,15 @@ def main():
     abstracts = [
         "Abstract 1: Previous studies have shown that Drug A significantly reduces systolic and diastolic blood pressure in hypertensive patients. However, the long-term effects of Drug A remain unclear.",
         "Abstract 2: The impact of Drug B on blood pressure variability was assessed in a randomized controlled trial involving 300 hypertensive patients. Results indicated a notable reduction in blood pressure fluctuations over a 24-hour period.",
-        "Abstract 3: A comparative study between Drug C and Drug D demonstrated that both medications effectively lower blood pressure, with Drug C showing a slightly better safety profile in elderly patients."
+        "Abstract 3: A comparative study between Drug C and Drug D demonstrated that both medications effectively lower blood pressure, with Drug C showing a slightly better safety profile in elderly patients.",
     ]
 
-    abstract_background = abstract_background_retriever(llm, title, context_objectives, population, methods, abstracts)
+    abstract_background = abstract_background_retriever(
+        llm, title, context_objectives, population, methods, abstracts
+    )
 
     print(title, abstract_background)
+
 
 if __name__ == "__main__":
     main()

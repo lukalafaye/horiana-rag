@@ -1,11 +1,17 @@
 import warnings
-warnings.filterwarnings('ignore')
+
+warnings.filterwarnings("ignore")
 
 from langchain_chroma import Chroma
-from rag.embed import connect_to_chromadb, StellaEmbeddingFunction, TestingEmbeddingFunction
+from rag.embed import (
+    connect_to_chromadb,
+    StellaEmbeddingFunction,
+    TestingEmbeddingFunction,
+)
 from pprint import pprint
 
-cpu = True 
+cpu = True
+
 
 def main():
     persistent_client = connect_to_chromadb()
@@ -29,7 +35,7 @@ def fetch_context(query, client, collection_name):
         embedding_function = TestingEmbeddingFunction()
     else:
         embedding_function = StellaEmbeddingFunction()
-    
+
     chroma_db = Chroma(
         client=client,
         collection_name=collection_name,
@@ -44,6 +50,7 @@ def fetch_context(query, client, collection_name):
     print(context_text)
 
     return context_text
+
 
 if __name__ == "__main__":
     main()
