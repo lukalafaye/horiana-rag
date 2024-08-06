@@ -1,4 +1,0 @@
-BASE_URL="http://127.0.0.1"
-API_KEY="secret"
-PORT=8001
-MODEL="Meta Llama 3.1 8B Instruct"

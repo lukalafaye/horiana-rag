@@ -1,0 +1,19 @@
+{
+    "pdf_path": "../data/confidential/capsular/capsular-stat-report.pdf",
+    "docx_path": "../data/confidential/capsular/capsular-stat-report.docx",
+    "synopsis_path": "../data/confidential/capsular/capsular-synopsis.docx",
+
+    "document_output_path": "../data/output/capsular.pkl",
+    "tables_output_path": "../data/output/tables.pkl",
+    "abstracts_output_path": "../data/output/abstracts.csv",
+
+    "test_pdf_path": "../data/redacted/redacted/redacted-stat-report.pdf",
+    "test_docx_path": "../data/redacted/redacted/redacted-stat-report.docx",
+    "test_synopsis_path": "../data/redacted/redacted/redacted-synopsis.docx",
+
+    "test_output_path": "../data/test-output/redacted.pkl",
+    "test_tables_path": "../data/test-output/tables.pkl",
+    "test_abstracts_path": "../data/test-output/abstracts.csv",
+
+    "prompts_path": "prompts/prompts.yaml"
+}

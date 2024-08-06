@@ -13,13 +13,13 @@ def connect_to_llama3_server():
         chroma_env = "/app/" + chroma_env
 
     load_dotenv(chroma_env)
-    base_url = os.getenv("BASE_URL")
-    api_key = os.getenv("API_KEY")
-    port = os.getenv("PORT")
-    model = os.getenv("MODEL")
+    base_url = os.getenv("LLAMA_BASE_URL")
+    api_key = os.getenv("OPENAI_API_KEY")
+    port = os.getenv("LLAMA_PORT")
+    model = os.getenv("LLAMA_MODEL")
 
     if not base_url or not api_key or not port:
-        raise ValueError("BASE_URL and API_KEY and PORT must be set")
+        raise ValueError("LLAMA_BASE_URL and OPENAI_API_KEY and LLAMA_PORT must be set")
 
     print(base_url, port)
     base_url = base_url + ":" + port + "/"

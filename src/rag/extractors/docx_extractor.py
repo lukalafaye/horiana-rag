@@ -1,7 +1,7 @@
-from rag.extractors.pdf_extractor import get_table_id
+from src.rag.extractors.pdf_extractor import get_table_id
 from docx import Document
 import pandas as pd
-
+from src.config import get_absolute_path # will also run config.py, setting up env variables
 
 def fix_encoding_issues(text):
     replacements = {"³": ">=", "£": "<="}

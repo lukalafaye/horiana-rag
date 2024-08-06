@@ -8,13 +8,15 @@ build/
 build/*
 
 # Ignore confidential documents
-confidential/
+confidential
+
+# Ignore Huggingface models
+models/
 
 # Ignore egg info
 *.egg-info/
 
-# Ignore Huggingface models
-models/
+
 
 # Ignore chromadb logs and data
 *.log

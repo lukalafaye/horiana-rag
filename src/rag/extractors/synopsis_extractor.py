@@ -2,6 +2,7 @@ from docx import Document
 from pprint import pprint
 import unicodedata
 import json
+from src.config import get_absolute_path # will also run config.py, setting up env variables
 
 docker = False
 
@@ -47,7 +48,8 @@ def extract_section(content, identifier):
 
 
 def main():
-    config_path = "config.json"
+    config_path = get_absolute_path("config.json")
+
     if docker:
         config_path = "/app/" + config_path
 
@@ -55,7 +57,7 @@ def main():
     with open(config_path, "r") as f:
         config = json.load(f)
 
-    synopsis_path = config.get("synopsis_path")
+    synopsis_path = get_absolute_path(config.get("synopsis_path"))
 
     content = extract_content(synopsis_path)
 
