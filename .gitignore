@@ -33,9 +33,6 @@ Thumbs.db
 *.pkl
 *.csv
 
-# Ignore and .pubmed_env
-.pubmed_env
-
 # Ignore venv/
 venv
 
@@ -43,7 +40,7 @@ venv
 chroma/
 
 # API keys
-.openai_env
+*.env
 
 # Ignore notebooks
 *.ipynb
