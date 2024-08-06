@@ -7,14 +7,16 @@ from src.rag.extractors.pdf_extractor import (
     extract_tables,
 )
 
-from src.rag.extractors.docx_extractor import extract_tables_from_doc, fetch_relevant_tables
+from src.rag.extractors.docx_extractor import (
+    extract_tables_from_doc,
+    fetch_relevant_tables,
+)
 
 from src.rag.extractors.synopsis_extractor import (
     extract_content,
     extract_section,
 )
 
-from src.config import get_absolute_path # will also run config.py, setting up env variables
 
 def process_files(pdf_path, docx_path, synopsis_path):
     # Extract information from the PDF

@@ -5,17 +5,18 @@ import json
 
 # import pandas as pd
 
-from rag.embed import load_tables_chunks, load_abstracts_chunks
+from src.rag.embed import load_tables_chunks, load_abstracts_chunks
+from src.config import get_absolute_path
 
 # GPU only
 # from rag.embed import StellaEmbeddingFunction connect_to_chromadb, update_collection, update_abstracts_collection
 
-from rag.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
+from src.rag.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
 
 
 @pytest.fixture(scope="module")
 def setup_data():
-    config_path = "config.json"
+    config_path = get_absolute_path("config.json")
 
     with open(config_path, "r") as f:
         config = json.load(f)
@@ -26,6 +27,13 @@ def setup_data():
     tables_path = config["test_tables_path"]
     abstracts_path = config["test_abstracts_path"]
     synopsis_path = config["test_synopsis_path"]
+
+    pdf_path = get_absolute_path(pdf_path)
+    docx_path = get_absolute_path(docx_path)
+    output_path = get_absolute_path(output_path)
+    tables_path = get_absolute_path(tables_path)
+    abstracts_path = get_absolute_path(abstracts_path)
+    synopsis_path = get_absolute_path(synopsis_path)
 
     keywords = ["knee", "bucket"]
 

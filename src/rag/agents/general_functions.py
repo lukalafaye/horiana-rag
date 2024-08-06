@@ -1,17 +1,22 @@
 from langchain_core.prompts import ChatPromptTemplate
-import yaml 
-from src.config import get_absolute_path # will also run config.py, setting up env variables
+import yaml
+from src.config import (
+    get_absolute_path,
+)  # will also run config.py, setting up env variables
 
 # General functions
 
+
 def load_prompts(yaml_file_path="prompts/prompts.yaml"):
-    yaml_file_path=get_absolute_path(yaml_file_path)
+    yaml_file_path = get_absolute_path(yaml_file_path)
     with open(yaml_file_path, "r", encoding="utf-8") as file:
         prompts = yaml.safe_load(file)
     return prompts
 
+
 prompts = load_prompts()
 docker = False
+
 
 # Generate system prompt
 def fetch_system_prompt(key, **kwargs):
@@ -28,6 +33,7 @@ def fetch_system_prompt(key, **kwargs):
 
     return system
 
+
 # Generate details prompt
 def build_details_string(**kwargs):
     # Create a dictionary to store the key-value pairs
@@ -39,7 +45,7 @@ def build_details_string(**kwargs):
         "keyresults": "Key results",
         "related_abstracts": "Related abstracts",
         "title": "Title",
-        "ethics": "Ethical considerations"
+        "ethics": "Ethical considerations",
     }
 
     # Initialize the details string
@@ -52,7 +58,7 @@ def build_details_string(**kwargs):
 
     # Close the string
     details += "\n"
-    
+
     return details
 
 

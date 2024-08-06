@@ -1,16 +1,16 @@
 import warnings
 import pickle
 import json
-from chromadb.config import Settings
-from dotenv import load_dotenv
-import os
 import chromadb
+from chromadb.config import Settings
+import os
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 from pprint import pprint
-from rag.utils import validate_params
+from src.rag.utils import validate_params
 import torch
+from src.config import get_absolute_path
 
 warnings.filterwarnings("ignore")
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -105,15 +105,11 @@ def connect_to_chromadb():
     Connects to chroma db server already running...
     """
 
-    chroma_env = ".chroma_env"
-    if docker:
-        chroma_env = "/app/" + chroma_env
-
-    load_dotenv(chroma_env)
     chroma_client_auth_credentials = os.getenv("CHROMA_CLIENT_AUTHN_CREDENTIALS")
     chroma_client_auth_provider = os.getenv("CHROMA_CLIENT_AUTHN_PROVIDER")
 
-    print(chroma_client_auth_provider, chroma_client_auth_credentials)
+    print(chroma_client_auth_credentials)
+    print(chroma_client_auth_provider)
     # https://cookbook.chromadb.dev/core/collections/#collection-utilities
     client = chromadb.HttpClient(
         settings=Settings(
@@ -190,7 +186,8 @@ def update_abstracts_collection(abstracts_chunks):
 
 
 def main():
-    config_path = "config.json"
+    config_path = get_absolute_path("config.json")
+
     if docker:
         config_path = "/app/" + config_path
 
@@ -199,6 +196,8 @@ def main():
         config = json.load(f)
 
     tables_path = config.get("tables_output_path")
+    tables_path = get_absolute_path(tables_path)
+
     tables_chunks = load_tables_chunks(tables_path)
 
     update_collection(
@@ -206,6 +205,8 @@ def main():
     )  # adds some text chunks to chromadb, returns tables_collection
 
     abstracts_path = config.get("abstracts_output_path")
+    abstracts_path = get_absolute_path(abstracts_path)
+
     abstracts_chunks = load_abstracts_chunks(abstracts_path)
 
     pprint(abstracts_chunks)

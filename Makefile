@@ -18,12 +18,12 @@ test:
 
 # Target to lint the code
 lint:
-	-flake8 --config=.flake8 rag/ tests/
+	-flake8 --config=.flake8 src/ tests/
 	@echo "Code linted."
 
 # Target to format the code
 format:
-	black rag/ tests/
+	black src/ tests/
 	@echo "Code formatted."
 
 # Target to check code quality

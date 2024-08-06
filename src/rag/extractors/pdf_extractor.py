@@ -1,6 +1,6 @@
 from PyPDF2 import PdfReader
 import re
-from src.config import get_absolute_path # will also run config.py, setting up env variables
+
 
 def extract_metadata_pages(pdf_path):
     """

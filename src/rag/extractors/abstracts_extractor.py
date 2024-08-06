@@ -2,9 +2,12 @@ import pandas as pd
 from pymed import PubMed
 import os
 import json
-from src.config import get_absolute_path # will also run config.py, setting up env variables
+from src.config import (
+    get_absolute_path,
+)  # will also run config.py, setting up env variables
 
 docker = False
+
 
 def fetch_from_keywords(keywords: list[str]):
     keywords = [keyword for keyword in keywords if keyword.strip()]
@@ -75,14 +78,13 @@ def main():
 
     # Saving instructions
     config_path = get_absolute_path("config.json")
-    
+
     if docker:
         config_path = "/app/" + config_path
 
     # Lire le fichier de configuration JSON
     with open(config_path, "r") as f:
         config = json.load(f)
-
 
     abstracts_path = get_absolute_path(config.get("abstracts_output_path"))
 

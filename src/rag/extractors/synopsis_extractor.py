@@ -2,7 +2,9 @@ from docx import Document
 from pprint import pprint
 import unicodedata
 import json
-from src.config import get_absolute_path # will also run config.py, setting up env variables
+from src.config import (
+    get_absolute_path,
+)  # will also run config.py, setting up env variables
 
 docker = False
 

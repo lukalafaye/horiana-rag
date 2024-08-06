@@ -1,5 +1,4 @@
 import pickle
-from pathlib import Path
 import json
 import os
 from src.rag.extractors.utils import process_files  # Updated import path
@@ -54,7 +53,7 @@ def fetch_abstracts(keywords, abstracts_output_path):
 def main():
     # Chemin vers le fichier de configuration JSON
     rag_dir = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(rag_dir, '..', 'config.json')
+    config_path = os.path.join(rag_dir, "..", "config.json")
 
     if docker:
         config_path = "/app/" + config_path
@@ -64,23 +63,22 @@ def main():
         config = json.load(f)
 
     pdf_path = config.get("pdf_path")
-    pdf_path = os.path.join(rag_dir, '..', pdf_path)
+    pdf_path = os.path.join(rag_dir, "..", pdf_path)
 
     docx_path = config.get("docx_path")
-    docx_path = os.path.join(rag_dir, '..', docx_path)
+    docx_path = os.path.join(rag_dir, "..", docx_path)
 
     synopsis_path = config.get("synopsis_path")
-    synopsis_path = os.path.join(rag_dir, '..', synopsis_path)
-
+    synopsis_path = os.path.join(rag_dir, "..", synopsis_path)
 
     document_output_path = config.get("document_output_path")
-    document_output_path = os.path.join(rag_dir, '..', document_output_path)
+    document_output_path = os.path.join(rag_dir, "..", document_output_path)
 
     tables_output_path = config.get("tables_output_path")
-    tables_output_path = os.path.join(rag_dir, '..', tables_output_path)
+    tables_output_path = os.path.join(rag_dir, "..", tables_output_path)
 
     abstracts_output_path = config.get("abstracts_output_path")
-    abstracts_output_path = os.path.join(rag_dir, '..', abstracts_output_path)
+    abstracts_output_path = os.path.join(rag_dir, "..", abstracts_output_path)
 
     if not pdf_path or not docx_path or not document_output_path:
         raise ValueError(

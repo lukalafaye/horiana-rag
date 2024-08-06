@@ -53,7 +53,13 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       env:
-        API_KEY: ${{ secrets.API_KEY }}
+        PUBMED_API_KEY: ${{ secrets.PUBMED_API_KEY }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        LLAMA_BASE_URL: ${{ secrets.LLAMA_BASE_URL }}
+        LLAMA_API_KEY: ${{ secrets.LLAMA_API_KEY }}
+        LLAMA_PORT: ${{ secrets.LLAMA_PORT }}
+        LLAMA_MODEL: ${{ secrets.LLAMA_MODEL }}
+        CHROMA_CLIENT_AUTHN_CREDENTIALS: ${{ secrets.CHROMA_CLIENT_AUTHN_CREDENTIALS }}
+        CHROMA_CLIENT_AUTHN_PROVIDER: ${{ secrets.CHROMA_CLIENT_AUTHN_PROVIDER }}
       run: |
         pytest

@@ -1,8 +1,6 @@
-from dotenv import load_dotenv
 import os
 from langchain_openai import OpenAI
 from pprint import pprint
-import src.config # will run config.py, setting up env variables
 
 from src.rag.agents.intro_retrievers import (
     title_retriever,
@@ -12,19 +10,20 @@ from src.rag.agents.intro_retrievers import (
     abstract_methods_retriever,
     abstract_results_retriever,
     abstract_conclusion_retriever,
-    abstract_keywords_retriever, # todo
-    introduction_retriever
+    abstract_keywords_retriever,  # todo
+    introduction_retriever,
 )
 
 from src.rag.agents.methods_retriever import (
     methods_study_design_participants_retriever,
-    methods_surgical_technique_retriever, # todo
+    methods_surgical_technique_retriever,  # todo
     methods_postoperative_rehabilitation_protocol_retriever,  # todo
     methods_follow_up_data_collection_retriever,  # todo
-    methods_statistical_analysis_retriever
+    methods_statistical_analysis_retriever,
 )
 
-docker = False 
+docker = False
+
 
 def generate_sample_data():
     title = "Effectiveness of New Drug X in Treating Hypertension"
@@ -62,7 +61,17 @@ def generate_sample_data():
     keywords = ""
     ethics = ""
 
-    return title, context_objectives, population, methods, abstracts_str, keyresults, keywords, ethics
+    return (
+        title,
+        context_objectives,
+        population,
+        methods,
+        abstracts_str,
+        keyresults,
+        keywords,
+        ethics,
+    )
+
 
 def create_llm_instance():
     open_api_key = os.getenv("OPENAI_API_KEY")
@@ -71,10 +80,20 @@ def create_llm_instance():
         raise ValueError("OPENAI_API_KEY environment variable is not set")
 
     llm = OpenAI(api_key=open_api_key)
-    return llm 
+    return llm
+
 
 def generate_sample_article():
-    title, context_objectives, population, methods, abstracts_str, keyresults, keywords, ethics = generate_sample_data()
+    (
+        title,
+        context_objectives,
+        population,
+        methods,
+        abstracts_str,
+        keyresults,
+        keywords,
+        ethics,
+    ) = generate_sample_data()
     llm = create_llm_instance()
 
     article = {
@@ -91,28 +110,55 @@ def generate_sample_article():
         "methods_surgical_technique": None,  # todo
         "methods_postoperative_rehabilitation_protocol": None,  # todo
         "methods_follow_up_data_collection": None,  # todo
-        "methods_statistical_analysis": None
+        "methods_statistical_analysis": None,
     }
 
     # Populating the article dictionary
-    article["title"] = title_retriever(llm, title, context_objectives, population, methods)
-    article["abstract_background"] = abstract_background_retriever(llm, title, context_objectives, population, methods, abstracts_str)
-    article["abstract_purpose_hypothesis"] = abstract_purpose_hypothesis_retriever(llm, title, context_objectives, population, methods)
-    article["abstract_study_design"] = abstract_study_design_retriever(llm) # todo
-    article["abstract_methods"] = abstract_methods_retriever(llm, title, context_objectives, population, methods)
-    article["abstract_results"] = abstract_results_retriever(llm, title, context_objectives, population, methods, keyresults)
+    article["title"] = title_retriever(
+        llm, title, context_objectives, population, methods
+    )
+    article["abstract_background"] = abstract_background_retriever(
+        llm, title, context_objectives, population, methods, abstracts_str
+    )
+    article["abstract_purpose_hypothesis"] = abstract_purpose_hypothesis_retriever(
+        llm, title, context_objectives, population, methods
+    )
+    article["abstract_study_design"] = abstract_study_design_retriever(llm)  # todo
+    article["abstract_methods"] = abstract_methods_retriever(
+        llm, title, context_objectives, population, methods
+    )
+    article["abstract_results"] = abstract_results_retriever(
+        llm, title, context_objectives, population, methods, keyresults
+    )
     generated_keyresults = article["abstract_results"]
-    article["abstract_conclusion"] = abstract_conclusion_retriever(llm, title, context_objectives, population, methods, generated_keyresults)
+    article["abstract_conclusion"] = abstract_conclusion_retriever(
+        llm, title, context_objectives, population, methods, generated_keyresults
+    )
     article["abstract_keywords"] = abstract_keywords_retriever(llm, keywords)  # todo
-    related_abstracts = abstracts_str # for now
-    article["introduction"] = introduction_retriever(llm, title, context_objectives, population, methods, related_abstracts)
-    article["methods_study_design_participants"] = methods_study_design_participants_retriever(llm, title, context_objectives, population, methods, ethics)
-    article["methods_surgical_technique"] = methods_surgical_technique_retriever(llm)  # todo
-    article["methods_postoperative_rehabilitation_protocol"] = methods_postoperative_rehabilitation_protocol_retriever(llm)  # todo
-    article["methods_follow_up_data_collection"] = methods_follow_up_data_collection_retriever(llm)  # todo
-    article["methods_statistical_analysis"] = methods_statistical_analysis_retriever(llm, title, context_objectives, population, methods, ethics)
+    related_abstracts = abstracts_str  # for now
+    article["introduction"] = introduction_retriever(
+        llm, title, context_objectives, population, methods, related_abstracts
+    )
+    article["methods_study_design_participants"] = (
+        methods_study_design_participants_retriever(
+            llm, title, context_objectives, population, methods, ethics
+        )
+    )
+    article["methods_surgical_technique"] = methods_surgical_technique_retriever(
+        llm
+    )  # todo
+    article["methods_postoperative_rehabilitation_protocol"] = (
+        methods_postoperative_rehabilitation_protocol_retriever(llm)
+    )  # todo
+    article["methods_follow_up_data_collection"] = (
+        methods_follow_up_data_collection_retriever(llm)
+    )  # todo
+    article["methods_statistical_analysis"] = methods_statistical_analysis_retriever(
+        llm, title, context_objectives, population, methods, ethics
+    )
 
     pprint(article)
+
 
 if __name__ == "__main__":
     generate_sample_article()

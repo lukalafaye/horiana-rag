@@ -5,12 +5,13 @@ import os
 import pickle
 import pandas as pd
 
-from rag.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
+from src.rag.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
+from src.config import get_absolute_path
 
 
 @pytest.fixture(scope="module")
 def pdf_paths():
-    root_dir = os.path.join(os.path.dirname(__file__), "../redacted")
+    root_dir = get_absolute_path("../data/redacted")
     studies_pdf_paths = {}
 
     for dirpath, _, filenames in os.walk(root_dir):
@@ -29,7 +30,7 @@ def pdf_paths():
 
 @pytest.fixture(scope="module")
 def docx_paths():
-    root_dir = os.path.join(os.path.dirname(__file__), "../redacted")
+    root_dir = get_absolute_path("../data/redacted")
     studies_docx_path = {}
 
     for dirpath, dirnames, filenames in os.walk(root_dir):
@@ -48,7 +49,7 @@ def docx_paths():
 
 @pytest.fixture(scope="module")
 def synopsis_paths():
-    root_dir = os.path.join(os.path.dirname(__file__), "../redacted")
+    root_dir = get_absolute_path("../data/redacted")
     studies_synopsis_paths = {}
 
     for dirpath, _, filenames in os.walk(root_dir):
@@ -71,7 +72,7 @@ def remove_file_if_exists(file_path):
 
 
 def test_preprocess(pdf_paths, docx_paths, synopsis_paths):
-    output_path = "out.pkl"
+    output_path = get_absolute_path("../data/test-output/out.pkl")
     remove_file_if_exists(output_path)
 
     print(synopsis_paths)
@@ -95,8 +96,8 @@ def test_preprocess(pdf_paths, docx_paths, synopsis_paths):
 
 
 def test_extract_tables_chunks(pdf_paths, docx_paths, synopsis_paths):
-    output_path = "out.pkl"
-    tables_path = "tables.pkl"
+    output_path = get_absolute_path("../data/test-output/out.pkl")
+    tables_path = get_absolute_path("../data/test-output/tables.pkl")
 
     remove_file_if_exists(output_path)
     remove_file_if_exists(tables_path)
@@ -121,8 +122,10 @@ def test_extract_tables_chunks(pdf_paths, docx_paths, synopsis_paths):
 
 def test_fetch_abstracts():
     keywords = ["knee", "bucket"]
-    abstracts_path = "out.csv"
+    abstracts_path = get_absolute_path("../data/test-output/out.csv")
+
     remove_file_if_exists(abstracts_path)
+    print(abstracts_path)
 
     fetch_abstracts(keywords, abstracts_path)
 

@@ -4,7 +4,7 @@ import pytest
 import os
 import pandas as pd
 
-from rag.extractors.pdf_extractor import (
+from src.rag.extractors.pdf_extractor import (
     extract_metadata_pages,
     extract_information,
     extract_title,
@@ -12,14 +12,19 @@ from rag.extractors.pdf_extractor import (
     extract_keyresults,
     extract_tables,
 )
-from rag.extractors.docx_extractor import extract_tables_from_doc, fetch_relevant_tables
-from rag.extractors.abstracts_extractor import fetch_from_keywords
+from src.rag.extractors.docx_extractor import (
+    extract_tables_from_doc,
+    fetch_relevant_tables,
+)
+from src.rag.extractors.abstracts_extractor import fetch_from_keywords
 
-from rag.extractors.synopsis_extractor import (
+from src.rag.extractors.synopsis_extractor import (
     extract_content,
     remove_accents,
     extract_section,
 )
+
+from src.config import get_absolute_path
 
 # fixtures
 
@@ -27,7 +32,7 @@ from rag.extractors.synopsis_extractor import (
 # pdf_metadata_and_text is tested using this fixture also...
 @pytest.fixture(scope="module")
 def pdf_metadata_and_text():
-    root_dir = os.path.join(os.path.dirname(__file__), "../redacted")
+    root_dir = get_absolute_path("../data/redacted")
     studies_path = {}
 
     for dirpath, _, filenames in os.walk(root_dir):
@@ -51,7 +56,7 @@ def pdf_metadata_and_text():
 
 @pytest.fixture(scope="module")
 def docx_tables():
-    root_dir = os.path.join(os.path.dirname(__file__), "../redacted")
+    root_dir = get_absolute_path("../data/redacted")
     studies_path = {}
 
     for dirpath, _, filenames in os.walk(root_dir):
@@ -84,7 +89,7 @@ def extracted_tables(pdf_metadata_and_text):
 
 @pytest.fixture(scope="module")
 def synopsis_contents():
-    root_dir = os.path.join(os.path.dirname(__file__), "../redacted")
+    root_dir = get_absolute_path("../data/redacted")
     studies_path = {}
 
     for dirpath, _, filenames in os.walk(root_dir):
