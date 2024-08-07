@@ -30,7 +30,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Configure AWS Credentials for China region audience
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        audience: sts.amazonaws.com
+        aws-region: us-east-2
+        role-to-assume: arn:aws:iam::891377004937:role/GithubActions
+    - name: Checkout repo
+      uses: actions/checkout@v4
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -47,13 +54,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Configure AWS Credentials for China region audience
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        audience: sts.amazonaws.com
-        aws-region: us-east-2
-        role-to-assume: arn:aws:iam::891377004937:role/GithubActions
-
     - name: Test with pytest
       run: |
         pytest
