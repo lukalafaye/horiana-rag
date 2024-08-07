@@ -1,7 +1,7 @@
 import openai
 from dotenv import load_dotenv
 import os
-from rag.utils import validate_params
+from healthdraft.utils import validate_params
 
 docker = False
 

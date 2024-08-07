@@ -1,10 +1,13 @@
 import warnings
 from langchain_chroma import Chroma
-from rag.embed import (
+from healthdraft.embed import (
     connect_to_chromadb,
     StellaEmbeddingFunction,
     TestingEmbeddingFunction,
 )
+
+from langchain_openai import OpenAI
+import os
 
 warnings.filterwarnings("ignore")
 
@@ -19,6 +22,18 @@ def main():
     collection_name = "abstracts"
 
     fetch_context(query, persistent_client, collection_name)
+
+
+
+def create_llm_instance():
+    open_api_key = os.getenv("OPENAI_API_KEY")
+
+    if open_api_key is None:
+        raise ValueError("OPENAI_API_KEY environment variable is not set")
+
+    llm = OpenAI(api_key=open_api_key)
+    return llm
+
 
 
 def fetch_context(query, client, collection_name):

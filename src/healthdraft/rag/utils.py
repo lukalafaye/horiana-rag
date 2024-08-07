@@ -1,8 +1,6 @@
-import os
-from langchain_openai import OpenAI
 from pprint import pprint
 
-from src.rag.agents.intro_retrievers import (
+from src.healthdraft.rag.intro_retrievers import (
     title_retriever,
     abstract_background_retriever,
     abstract_purpose_hypothesis_retriever,
@@ -14,7 +12,7 @@ from src.rag.agents.intro_retrievers import (
     introduction_retriever,
 )
 
-from src.rag.agents.methods_retriever import (
+from src.healthdraft.rag.methods_retriever import (
     methods_study_design_participants_retriever,
     methods_surgical_technique_retriever,  # todo
     methods_postoperative_rehabilitation_protocol_retriever,  # todo
@@ -22,79 +20,15 @@ from src.rag.agents.methods_retriever import (
     methods_statistical_analysis_retriever,
 )
 
+from src.healthdraft.rag.generate_data import generate_sample_data
+
+from src.healthdraft.rag.llama import create_llama_instance
+
 docker = False
 
-
-def generate_sample_data():
-    title = "Effectiveness of New Drug X in Treating Hypertension"
-
-    context_objectives = """This study aims to evaluate the effectiveness of New Drug X in reducing blood
-    pressure levels in patients diagnosed with hypertension.
-    """
-
-    population = """The study involves 500 participants aged between 30 and 65,
-    all diagnosed with stage 1 or stage 2 hypertension. Participants were randomly
-    assigned to either the treatment group receiving New Drug X or the control
-    group receiving a placebo.
-    """
-
-    methods = """A double-blind, randomized, placebo-controlled trial was conducted
-    over 12 weeks. Blood pressure levels were measured at baseline, week 6, and week 12.
-    Statistical analysis was performed using a mixed-effects model for repeated measures.
-    """
-
-    abstracts = [
-        "Abstract 1: Previous studies have shown that Drug A significantly reduces systolic \
-        and diastolic blood pressure in hypertensive patients. \
-        However, the long-term effects of Drug A remain unclear.",
-        "Abstract 2: The impact of Drug B on blood pressure variability was assessed in a \
-        randomized controlled trial involving 300 hypertensive patients. \
-        Results indicated a notable reduction in blood pressure fluctuations over a 24-hour period.",
-        "Abstract 3: A comparative study between Drug C and Drug D demonstrated that both \
-        medications effectively lower blood pressure, with Drug C showing a slightly \
-        better safety profile in elderly patients.",
-    ]
-
-    abstracts_str = "\n\n".join(abstracts)
-
-    keyresults = ""
-    keywords = ""
-    ethics = ""
-
-    return (
-        title,
-        context_objectives,
-        population,
-        methods,
-        abstracts_str,
-        keyresults,
-        keywords,
-        ethics,
-    )
-
-
-def create_llm_instance():
-    open_api_key = os.getenv("OPENAI_API_KEY")
-
-    if open_api_key is None:
-        raise ValueError("OPENAI_API_KEY environment variable is not set")
-
-    llm = OpenAI(api_key=open_api_key)
-    return llm
-
-
-def generate_sample_article():
-    (
-        title,
-        context_objectives,
-        population,
-        methods,
-        abstracts_str,
-        keyresults,
-        keywords,
-        ethics,
-    ) = generate_sample_data()
-    llm = create_llm_instance()
+def generate_sample_article(title, context_objectives, population, methods, abstracts_str, keyresults, keywords, ethics):
+    
+    llm = create_llama_instance()
 
     article = {
         "title": None,
@@ -157,8 +91,11 @@ def generate_sample_article():
         llm, title, context_objectives, population, methods, ethics
     )
 
-    pprint(article)
+    return article
 
 
 if __name__ == "__main__":
-    generate_sample_article()
+    title, context_objectives, population, methods, abstracts_str, keyresults, keywords, ethics = generate_sample_data()
+    article = generate_sample_article(title, context_objectives, population, methods, abstracts_str, keyresults, keywords, ethics)
+    pprint(article)
+
