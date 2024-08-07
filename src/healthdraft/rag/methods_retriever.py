@@ -1,6 +1,6 @@
 from langchain_core.output_parsers import StrOutputParser
 
-from src.rag.agents.general_functions import (
+from src.healthdraft.rag.prompt_setup import (
     fetch_system_prompt,
     build_details_string,
     create_final_prompt,

@@ -19,6 +19,7 @@ langchain-community
 chromadb==0.5.5
 langchain_openai
 boto3
+langchain_aws
 
 # Development and testing dependencies
 pytest
