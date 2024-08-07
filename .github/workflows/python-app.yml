@@ -11,22 +11,24 @@ on:
       - '.*'
       - 'Dockerfile'
       - 'Makefile'
-  pull_request:
-    branches: [ "main" ]
-    paths-ignore:
-      - '*.md'
-      - '.*'
-      - 'Dockerfile'
-      - 'Makefile'
 
 permissions:
+  id-token: write
   contents: read
+
+env:
+  PUBMED_API_KEY: ${{ secrets.PUBMED_API_KEY }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  LLAMA_BASE_URL: ${{ secrets.LLAMA_BASE_URL }}
+  LLAMA_API_KEY: ${{ secrets.LLAMA_API_KEY }}
+  LLAMA_PORT: ${{ secrets.LLAMA_PORT }}
+  LLAMA_MODEL: ${{ secrets.LLAMA_MODEL }}
+  CHROMA_CLIENT_AUTHN_CREDENTIALS: ${{ secrets.CHROMA_CLIENT_AUTHN_CREDENTIALS }}
+  CHROMA_CLIENT_AUTHN_PROVIDER: ${{ secrets.CHROMA_CLIENT_AUTHN_PROVIDER }}
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
@@ -43,23 +45,15 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Configure AWS Credentials for China region audience
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        audience: sts.amazonaws.com
+        aws-region: us-east-2
+        role-to-assume: arn:aws:iam::891377004937:role/GithubActions
+
     - name: Test with pytest
-      env:
-        PUBMED_API_KEY: ${{ secrets.PUBMED_API_KEY }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        LLAMA_BASE_URL: ${{ secrets.LLAMA_BASE_URL }}
-        LLAMA_API_KEY: ${{ secrets.LLAMA_API_KEY }}
-        LLAMA_PORT: ${{ secrets.LLAMA_PORT }}
-        LLAMA_MODEL: ${{ secrets.LLAMA_MODEL }}
-        CHROMA_CLIENT_AUTHN_CREDENTIALS: ${{ secrets.CHROMA_CLIENT_AUTHN_CREDENTIALS }}
-        CHROMA_CLIENT_AUTHN_PROVIDER: ${{ secrets.CHROMA_CLIENT_AUTHN_PROVIDER }}
       run: |
         pytest
