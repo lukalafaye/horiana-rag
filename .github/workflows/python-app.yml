@@ -35,7 +35,7 @@ jobs:
       with:
         audience: sts.amazonaws.com
         aws-region: us-east-2
-        role-to-assume: arn:aws:iam::891377004937:role/GithubActions
+        role-to-assume: arn:aws:iam::891377004937:role/Github
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Set up Python 3.10
