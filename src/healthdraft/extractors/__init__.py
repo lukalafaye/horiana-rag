@@ -1,4 +1,4 @@
-from .pdf_extractor import (
+from src.healthdraft.extractors.pdf_extractor import (
     extract_metadata_pages,
     extract_title,
     extract_methods,
@@ -7,9 +7,9 @@ from .pdf_extractor import (
     extract_information,
 )
 
-from .docx_extractor import extract_tables_from_doc, fetch_relevant_tables
+from src.healthdraft.extractors.docx_extractor import extract_tables_from_doc, fetch_relevant_tables
 
-from .abstracts_extractor import fetch_from_keywords
+from src.healthdraft.extractors.abstracts_extractor import fetch_from_keywords
 
 __all__ = [
     "extract_metadata_pages",

@@ -1,5 +1,5 @@
+
 from PyPDF2 import PdfReader
-import os
 from pprint import pprint
 import re
 

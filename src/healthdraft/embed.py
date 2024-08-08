@@ -8,7 +8,7 @@ from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 from pprint import pprint
-from src.rag.utils import validate_params
+from src.healthdraft.utils import validate_params
 import torch
 from src.config import get_absolute_path
 

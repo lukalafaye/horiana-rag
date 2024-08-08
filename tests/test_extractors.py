@@ -4,7 +4,7 @@ import pytest
 import os
 import pandas as pd
 
-from src.rag.extractors.pdf_extractor import (
+from src.healthdraft.extractors.pdf_extractor import (
     extract_metadata_pages,
     extract_information,
     extract_title,
@@ -12,13 +12,13 @@ from src.rag.extractors.pdf_extractor import (
     extract_keyresults,
     extract_tables,
 )
-from src.rag.extractors.docx_extractor import (
+from src.healthdraft.extractors.docx_extractor import (
     extract_tables_from_doc,
     fetch_relevant_tables,
 )
-from src.rag.extractors.abstracts_extractor import fetch_from_keywords
+from src.healthdraft.extractors.abstracts_extractor import fetch_from_keywords
 
-from src.rag.extractors.synopsis_extractor import (
+from src.healthdraft.extractors.synopsis_extractor import (
     extract_content,
     remove_accents,
     extract_section,

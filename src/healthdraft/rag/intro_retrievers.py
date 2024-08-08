@@ -1,5 +1,4 @@
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
 
 from src.healthdraft.rag.prompt_setup import (
     fetch_system_prompt,

@@ -5,7 +5,7 @@ import os
 import pickle
 import pandas as pd
 
-from src.rag.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
+from src.healthdraft.preprocess import preprocess, extract_tables_chunks, fetch_abstracts
 from src.config import get_absolute_path
 
 

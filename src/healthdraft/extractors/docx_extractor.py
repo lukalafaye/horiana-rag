@@ -1,4 +1,4 @@
-from src.rag.extractors.pdf_extractor import get_table_id
+from src.healthdraft.extractors.pdf_extractor import get_table_id
 from docx import Document
 import pandas as pd
 

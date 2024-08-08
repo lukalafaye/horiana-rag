@@ -26,5 +26,3 @@ if __name__ == "__main__":
     chain = prompt | llm
 
     print(chain.invoke({"system": system, "details": user}))
-
-    # !!!! FIX PROMPT LOGIC IN ALL RETRIEVERS LIKE THIS...

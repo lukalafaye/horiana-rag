@@ -1,7 +1,6 @@
 from PyPDF2 import PdfReader
 import re
 
-
 def extract_metadata_pages(pdf_path):
     """
     Returns document metadata and content
