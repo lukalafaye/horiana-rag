@@ -114,4 +114,3 @@ Main scripts:
 - Change pubmed logo in rag workflow
 - Add tests
 - Comment all methods / functions
-- Make it work with bedrock
