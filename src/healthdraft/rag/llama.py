@@ -13,16 +13,6 @@ def create_llama_instance(model_id="meta.llama3-8b-instruct-v1:0"):
     )
     return llm
 
-def create_final_prompt(system, user):
-    user_prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", system),
-            ("user", user),
-        ]
-    )
-    print(user_prompt)
-    return user_prompt
-
 if __name__ == "__main__":
     llm = create_llama_instance()
     print(llm)
@@ -30,7 +20,9 @@ if __name__ == "__main__":
     system="You are a medical assistant."
     user="What is asthma?"
 
-    p = create_final_prompt(system, user)
+    p = create_final_prompt()
     chain = p | llm
 
-    print(chain.invoke())
+    print(chain.invoke({"system": system, "details": user}))
+
+    # !!!! FIX PROMPT LOGIC IN ALL RETRIEVERS LIKE THIS...

@@ -1,10 +1,10 @@
 import pickle
 import json
 import os
-from src.rag.extractors.utils import process_files  # Updated import path
-from src.rag.extractors.abstracts_extractor import fetch_from_keywords
+from src.healthdraft.extractors.utils import process_files  # Updated import path
+from src.healthdraft.extractors.abstracts_extractor import fetch_from_keywords
 
-from src.rag.utils import validate_params
+from src.healthdraft.utils import validate_params
 
 docker = False
 

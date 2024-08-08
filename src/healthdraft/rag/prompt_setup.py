@@ -62,11 +62,11 @@ def build_details_string(**kwargs):
     return details
 
 
-def create_final_prompt(system, details):
-    user_prompt = ChatPromptTemplate.from_messages(
+def create_final_prompt():
+    prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", system),
-            ("user", details),
+            ("system", "{system}"),
+            ("user", "{details}"),
         ]
     )
-    return user_prompt
+    return prompt
