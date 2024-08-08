@@ -1,10 +1,12 @@
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 
 from src.healthdraft.rag.prompt_setup import (
     fetch_system_prompt,
-    build_details_string,
-    create_final_prompt,
+    build_details_string
 )
+
+from src.healthdraft.rag.config import prompt
 
 # Specific Agents
 
@@ -15,8 +17,7 @@ def title_retriever(llm, title, context_objectives, population, methods):
     details = build_details_string(
         context_objectives=context_objectives, population=population, methods=methods
     )
-    title_prompt = create_final_prompt(system, details)
-    title_chain = title_prompt | llm | StrOutputParser()
+    title_chain = prompt | llm | StrOutputParser()
     return title_chain.invoke({"system": system, "details": details})
 
 
@@ -35,10 +36,7 @@ def abstract_background_retriever(
         abstracts_str=abstracts_str,
     )
 
-    print("SYSTEME: ", system)
-
-    abstract_background_prompt = create_final_prompt(system, details)
-    abstract_background_chain = abstract_background_prompt | llm | StrOutputParser()
+    abstract_background_chain = prompt | llm | StrOutputParser()
     return abstract_background_chain.invoke({"system": system, "details": details})
 
 
@@ -50,9 +48,8 @@ def abstract_purpose_hypothesis_retriever(
     details = build_details_string(
         context_objectives=context_objectives, population=population, methods=methods
     )
-    abstract_purpose_hypothesis_prompt = create_final_prompt(system, details)
     abstract_purpose_hypothesis_chain = (
-        abstract_purpose_hypothesis_prompt | llm | StrOutputParser()
+        prompt | llm | StrOutputParser()
     )
     return abstract_purpose_hypothesis_chain.invoke(
         {"system": system, "details": details}
@@ -70,8 +67,7 @@ def abstract_methods_retriever(llm, title, context_objectives, population, metho
     details = build_details_string(
         context_objectives=context_objectives, population=population, methods=methods
     )
-    abstract_methods_prompt = create_final_prompt(system, details)
-    abstract_methods_chain = abstract_methods_prompt | llm | StrOutputParser()
+    abstract_methods_chain = prompt | llm | StrOutputParser()
     return abstract_methods_chain.invoke({"system": system, "details": details})
 
 
@@ -86,8 +82,7 @@ def abstract_results_retriever(
         methods=methods,
         keyresults=keyresults,
     )
-    abstract_results_prompt = create_final_prompt(system, details)
-    abstract_results_chain = abstract_results_prompt | llm | StrOutputParser()
+    abstract_results_chain = prompt | llm | StrOutputParser()
     return abstract_results_chain.invoke({"system": system, "details": details})
 
 
@@ -102,8 +97,7 @@ def abstract_conclusion_retriever(
         methods=methods,
         keyresults=generated_keyresults,
     )
-    abstract_conclusion_prompt = create_final_prompt(system, details)
-    abstract_conclusion_chain = abstract_conclusion_prompt | llm | StrOutputParser()
+    abstract_conclusion_chain = prompt | llm | StrOutputParser()
     return abstract_conclusion_chain.invoke({"system": system, "details": details})
 
 
@@ -126,6 +120,5 @@ def introduction_retriever(
         methods=methods,
         related_abstracts=related_abstracts,
     )
-    introduction_prompt = create_final_prompt(system, details)
-    introduction_chain = introduction_prompt | llm | StrOutputParser()
+    introduction_chain = prompt | llm | StrOutputParser()
     return introduction_chain.invoke({"system": system, "details": details})

@@ -1,4 +1,3 @@
-from langchain_core.prompts import ChatPromptTemplate
 import yaml
 from src.config import (
     get_absolute_path,
@@ -60,13 +59,3 @@ def build_details_string(**kwargs):
     details += "\n"
 
     return details
-
-
-def create_final_prompt():
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", "{system}"),
-            ("user", "{details}"),
-        ]
-    )
-    return prompt

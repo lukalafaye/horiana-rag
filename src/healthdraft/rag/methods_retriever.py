@@ -2,9 +2,10 @@ from langchain_core.output_parsers import StrOutputParser
 
 from src.healthdraft.rag.prompt_setup import (
     fetch_system_prompt,
-    build_details_string,
-    create_final_prompt,
+    build_details_string
 )
+
+from src.healthdraft.rag.config import prompt
 
 # METHODS #################
 
@@ -22,9 +23,8 @@ def methods_study_design_participants_retriever(
         methods=methods,
         ethics=ethics,
     )
-    methods_study_design_participants_prompt = create_final_prompt(system, details)
     methods_study_design_participants_chain = (
-        methods_study_design_participants_prompt | llm | StrOutputParser()
+        prompt | llm | StrOutputParser()
     )
     return methods_study_design_participants_chain.invoke(
         {"system": system, "details": details}
@@ -57,9 +57,8 @@ def methods_statistical_analysis_retriever(
         methods=methods,
         ethics=ethics,
     )
-    methods_statistical_study_prompt = create_final_prompt(system, details)
     methods_statistical_study_chain = (
-        methods_statistical_study_prompt | llm | StrOutputParser()
+        prompt | llm | StrOutputParser()
     )
     return methods_statistical_study_chain.invoke(
         {"system": system, "details": details}
