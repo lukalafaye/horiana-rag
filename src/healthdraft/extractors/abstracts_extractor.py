@@ -8,7 +8,7 @@ docker = False  # Flag to check if the script is running in a Docker environment
 
 def fetch_from_keywords(keywords: list[str]):
     """
-    Fetches articles from PubMed based on a list of keywords.
+    Fetches articles from PubMed based on a list of keywords, removes duplicates.
 
     Args:
         keywords (list[str]): List of keywords to search for articles.
@@ -34,7 +34,7 @@ def fetch_from_keywords(keywords: list[str]):
 
     # Use the API key in the PubMed API requests
     pubmed.parameters.update({"api_key": pubmed_api_key})
-    pubmed._rateLimit = 10  # Set a rate limit for API calls
+    pubmed._rateLimit = 10  # Inrease the rate limit for API calls
 
     # Initialize lists to store article information
     articleList = []

@@ -4,6 +4,16 @@ import pandas as pd
 
 
 def fix_encoding_issues(text):
+    """
+    Fix encoding issues after docx parsing.
+    ³ -> >=
+    ³  unicode characters by docx
+
+    Args:
+
+    Returns:
+
+    """
     replacements = {"³": ">=", "£": "<="}
     for wrong, correct in replacements.items():
         text = text.replace(wrong, correct)
